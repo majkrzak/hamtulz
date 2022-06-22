@@ -1,4 +1,3 @@
-resolver:
-  url: lts-19.12
+resolver: lts-19.12
 packages:
 - .

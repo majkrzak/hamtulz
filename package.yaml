@@ -6,6 +6,7 @@ author:              "Piotr Majkrzak"
 
 dependencies:
 - base >= 4.7 && < 5
+- parsec
 
 library:
   source-dirs: src
