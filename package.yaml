@@ -1,0 +1,33 @@
+name:                hamtulz
+version:             0.0.0.0
+github:              "majkrzak/hamtulz"
+license:             ISC
+author:              "Piotr Majkrzak"
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  hamtulz-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hamtulz
+
+tests:
+  hamtulz-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hamtulz

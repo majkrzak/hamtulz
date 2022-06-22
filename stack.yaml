@@ -1,0 +1,4 @@
+resolver:
+  url: lts-19.12
+packages:
+- .
