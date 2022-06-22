@@ -10,6 +10,7 @@ import Text.Read (read)
 import Text.Show (Show)
 import Data.Char (toLower)
 import Control.Applicative ((<$>))
+import Data.Maybe (Maybe)
 
 
 -- | Parses ADI Data-Specifiers
@@ -43,6 +44,14 @@ header = try $ do
   eoh
   return $ Header (text,fields)
 
+-- | Parses ADI File
+file :: Parser File
+file = try $ do
+  maybeHeader <- optionMaybe header
+  records <- many record
+  eof
+  return $ File (maybeHeader, records)
+
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
 eoh = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> spaces
@@ -52,6 +61,7 @@ eor :: Parser ()
 eor = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
 
 
+newtype File = File (Maybe Header, [Record]) deriving Show
 newtype Header = Header (String, [Field]) deriving Show
 newtype Record = Record [Field] deriving Show
 newtype Field = Field (FieldName, FieldData) deriving Show
