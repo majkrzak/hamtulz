@@ -35,6 +35,14 @@ record = try $ do
   eor
   return $ Record fields
 
+-- | Parses ADI Header
+header :: Parser Header
+header = try $ do
+  text <- manyTill anyChar $ lookAhead (choice [void field, eoh])
+  fields <- many field
+  eoh
+  return $ Header (text,fields)
+
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
 eoh = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> spaces
@@ -44,6 +52,7 @@ eor :: Parser ()
 eor = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
 
 
+newtype Header = Header (String, [Field]) deriving Show
 newtype Record = Record [Field] deriving Show
 newtype Field = Field (FieldName, FieldData) deriving Show
 type FieldName = String
