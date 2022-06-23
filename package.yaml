@@ -7,6 +7,14 @@ author:              "Piotr Majkrzak"
 dependencies:
 - base >= 4.7 && < 5
 - parsec
+- time
+- aeson
+- yaml
+
+default-extensions:
+- DeriveGeneric
+- DeriveAnyClass
+- LambdaCase
 
 library:
   source-dirs: src

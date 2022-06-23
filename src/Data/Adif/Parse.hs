@@ -3,14 +3,12 @@ module Data.Adif.Parse where
 import Prelude()
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Data.String (String)
 import Control.Monad (return, (>>), void)
 import Data.Function (($))
 import Text.Read (read)
-import Text.Show (Show)
 import Data.Char (toLower)
 import Control.Applicative ((<$>))
-import Data.Maybe (Maybe)
+import Data.Adif
 
 
 -- | Parses ADI Data-Specifiers
@@ -59,11 +57,3 @@ eoh = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> sp
 -- | Parses End-Of-Record tag
 eor :: Parser ()
 eor = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
-
-
-newtype File = File (Maybe Header, [Record]) deriving Show
-newtype Header = Header (String, [Field]) deriving Show
-newtype Record = Record [Field] deriving Show
-newtype Field = Field (FieldName, FieldData) deriving Show
-type FieldName = String
-type FieldData = String
