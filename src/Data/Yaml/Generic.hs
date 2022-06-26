@@ -6,12 +6,13 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
 
+
 module Data.Yaml.Generic () where
 
 import GHC.Generics
 import Data.Text (pack, Text)
 import Data.Yaml.Builder (YamlBuilder(YamlBuilder), ToYaml, toYaml, mapping, unYamlBuilder, string)
-
+import Data.ByteString (ByteString)
 
 class GToYaml f where
   gToYaml :: f a -> YamlBuilder
@@ -35,6 +36,10 @@ class GToYamlPairs f where
 
 instance (Selector s, GToYaml f) => GToYamlPairs (S1 s f) where
   gToYamlPairs x = [(pack (selName x), gToYaml (unM1 x))]
+
+instance {-# INCOHERENT #-} (Selector s, ToYaml a) => GToYamlPairs (S1 s (K1 i (Maybe a))) where
+  gToYamlPairs (M1 (K1 Nothing)) = []
+  gToYamlPairs x@(M1 (K1 (Just a))) = [(pack (selName x), toYaml a)]
 
 instance (GToYamlPairs x, GToYamlPairs y) => GToYamlPairs (x :*: y) where
   gToYamlPairs (l :*: r) = l' <> r'
