@@ -26,8 +26,11 @@ adif2log (Adif.File (_, records)) = map record2record records
           , Log.power = Nothing
           }
         }
-      , Log.mode = read <$> findField "mode"
-      , Log.frequency = read <$> findField "freq"
+      , Log.connection = Just Log.Connection
+        { Log.band = read <$> findField "band"
+        , Log.mode = read <$> findField "mode"
+        , Log.frequency = read <$> findField "freq"
+        }
       , Log.report = Just Log.Report
         { Log.sent = findField "rst_sent"
         , Log.rcvd = findField "rst_rcvd"

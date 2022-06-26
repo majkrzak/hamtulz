@@ -54,4 +54,3 @@ instance ToYaml a => GToYaml (K1 R a) where
 
 instance {-# OVERLAPPABLE #-} (Generic a, GToYaml (Rep a)) => ToYaml a where
   toYaml = gToYaml . from
-
