@@ -1,27 +1,28 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 
 module Data.Yaml.Generic () where
 
 import GHC.Generics
 import Data.Text (pack, Text)
-import Data.Yaml.Builder (YamlBuilder(YamlBuilder), ToYaml, toYaml, mapping, unYamlBuilder, string)
-import Data.ByteString (ByteString)
+import Data.Yaml.Builder (YamlBuilder, ToYaml, toYaml, mapping, string)
+import Data.Data (Proxy(Proxy))
+
 
 class GToYaml f where
   gToYaml :: f a -> YamlBuilder
 
 instance GToYaml f => GToYaml (D1 d f) where
   gToYaml = gToYaml . unM1
-
-instance Constructor c => GToYaml (C1 c U1) where
-  gToYaml x = string $ pack $ conName x
 
 instance (GToYaml x, GToYaml y) => GToYaml (x :+: y) where
   gToYaml (L1 l) = gToYaml l
@@ -48,9 +49,25 @@ instance (GToYamlPairs x, GToYamlPairs y) => GToYamlPairs (x :*: y) where
       r' = gToYamlPairs r
 
 
+
+data ToYamlMode = ToYamlGeneric | ToYamlShow
+
+class ToYaml' (flag :: ToYamlMode) a where
+  toYaml' :: Proxy flag -> a -> YamlBuilder
+
 instance ToYaml a => GToYaml (K1 R a) where
   gToYaml x = toYaml $ unK1 x
 
+instance Show a => ToYaml' 'ToYamlShow a where
+   toYaml' _ = string . pack . show
 
-instance {-# OVERLAPPABLE #-} (Generic a, GToYaml (Rep a)) => ToYaml a where
-  toYaml = gToYaml . from
+instance (Generic a, GToYaml (Rep a)) => ToYaml' 'ToYamlGeneric a where
+   toYaml' _ = gToYaml . from
+
+type family FindHowToConvertToYaml rep :: ToYamlMode where
+  FindHowToConvertToYaml (D1 _ (_ :+: _)) = 'ToYamlShow
+  FindHowToConvertToYaml _ = 'ToYamlGeneric
+
+
+instance {-# OVERLAPPABLE #-}  (ToYaml' (FindHowToConvertToYaml (Rep a)) a) => ToYaml a where
+  toYaml = toYaml' (Proxy @(FindHowToConvertToYaml (Rep a)))

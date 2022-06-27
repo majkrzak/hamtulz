@@ -48,9 +48,6 @@ instance Read Band where
   readsPrec _ "40m" = [(Forty, "")]
   readsPrec _ _ = []
 
-instance ToYaml Band where
-  toYaml = toYaml . show
-
 data Mode = CW | SSB | FT8 deriving (Eq, Show, Read, Generic)
 
 data Report = Report
