@@ -1,7 +1,7 @@
 module Data.Adif2Log (adif2log) where
 
 import qualified Data.Log as Log
-import qualified Data.Adif as Adif
+import qualified Data.AdifOld as Adif
 import Data.List (find)
 import Data.Time (UTCTime, parseTimeOrError, defaultTimeLocale)
 import Data.Maybe (fromJust)

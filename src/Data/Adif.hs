@@ -1,9 +1,31 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Data.Adif where
 
-newtype File = File (Maybe Header, [Record]) deriving Show
-newtype Header = Header (HeaderText, [Field]) deriving Show
-newtype Record = Record [Field] deriving Show
-newtype Field = Field (FieldName, FieldData) deriving Show
-type HeaderText = String
-type FieldName = String
-type FieldData = String
+
+import GHC.Generics (Generic)
+import Data.Char (toLower)
+import Data.Adif.Definition (qsoFields)
+import Language.Haskell.TH (Dec(DataD), Con(RecC), DerivClause(DerivClause), mkName, Bang(Bang), SourceUnpackedness(NoSourceUnpackedness),SourceStrictness(NoSourceStrictness), Type(ConT) )
+
+$(return [
+  DataD
+    []
+    (mkName "Record")
+    []
+    Nothing
+    [
+      RecC
+        (mkName "Record")
+        [
+          (mkName ("_" <> (toLower <$> record)),Bang NoSourceUnpackedness NoSourceStrictness, ConT (mkName "String"))
+          | record <- qsoFields
+        ]
+    ]
+    [ DerivClause Nothing
+      [
+        ConT (mkName name) 
+        | name <- ["Eq", "Show", "Read", "Generic"]
+      ]
+    ] 
+ ])

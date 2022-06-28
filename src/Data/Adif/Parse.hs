@@ -8,7 +8,7 @@ import Data.Function (($))
 import Text.Read (read)
 import Data.Char (toLower)
 import Control.Applicative ((<$>))
-import Data.Adif
+import Data.AdifOld
 
 
 -- | Parses ADI Data-Specifiers
