@@ -3,27 +3,13 @@
 
 module Data.Adif.Parser where
 
-import           Control.Monad                  ( void )
-import           Data.Adif
-import           Data.Adif.Definition           ( qsoFields )
-import           Data.Char                      ( toLower
-                                                , toUpper
-                                                )
-import           Language.Haskell.TH            ( Exp
-                                                  ( LamE
-                                                  , ListE
-                                                  , LitE
-                                                  , RecUpdE
-                                                  , TupE
-                                                  , VarE
-                                                  )
-                                                , Lit(StringL)
-                                                , Pat(VarP)
-                                                , Q
-                                                , mkName
-                                                )
-import           Text.Parsec
-import           Text.Parsec.String             ( Parser )
+import Text.Parsec
+import Text.Parsec.String (Parser)
+import Data.Adif
+import Control.Monad (void)
+import Data.Char (toUpper, toLower)
+import Language.Haskell.TH (Q, Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE), Lit(StringL), Pat(VarP), mkName)
+import Data.Adif.Definition (qsoFields)
 
 
 file :: Parser [Record]

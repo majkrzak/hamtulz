@@ -17,7 +17,6 @@ default-extensions:
 - DeriveGeneric
 - DeriveAnyClass
 - LambdaCase
-- TemplateHaskell
 
 library:
   source-dirs: src
