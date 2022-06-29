@@ -1,7 +1,4 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TemplateHaskell #-}
-
-module Data.Adif.Parser where
+module Data.Adif.Parser (file, record) where
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
@@ -11,19 +8,29 @@ import Data.Char (toUpper, toLower)
 import Language.Haskell.TH (Q, Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE), Lit(StringL), Pat(VarP), mkName)
 import Data.Adif.Definition (qsoFields)
 
-
+-- | Parses ADI File
+-- According to the https://www.adif.org/313/ADIF_313.htm#ADI_File_Format
+-- Return list of Records
 file :: Parser [Record]
 file = try $ do
-  _       <- header
-  records <- many parseRecord
+  _       <- optionMaybe header
+  records <- many record
   eof
   return records
 
-parseRecord :: Parser Record
-parseRecord = try $ do
+-- | Parses ADI Header
+-- Dummy implementation which ignore the content.
+header :: Parser ()
+header = try $ void $ manyTill anyChar eoh
+
+-- | Parses ADI Records
+-- According to the https://www.adif.org/313/ADIF_313.htm#ADI_Record
+-- User defined fields are not supported yet.
+record :: Parser Record
+record = try $ do
   fields <- many
     (choice $ map
-      (uncurry parseField)
+      (uncurry field)
       $(pure $
         ListE
           [ TupE
@@ -40,11 +47,10 @@ parseRecord = try $ do
   eor
   return $ foldl (\r f -> f r) emptyRecord fields
 
-parseField
-  :: String -> (String -> Record -> Record) -> Parser (Record -> Record)
-parseField name set = try $ do
+field :: String -> (String -> Record -> Record) -> Parser (Record -> Record)
+field name set = try $ do
   void $ char '<'
-  void $ caseString name
+  void $ identifier name
   void $ char ':'
   len <- many1 digit
   void $ optional $ char ':' >> many letter
@@ -53,24 +59,16 @@ parseField name set = try $ do
   spaces
   return $ set val
 
-header :: Parser ()
-header =
-  try $ void (lookAhead $ try $ char '<') <|> void (manyTill anyChar eoh)
 
 
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
-eoh =
-  try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> spaces
+eoh = try $ char '<' >> identifier "EOH" >> char '>' >> spaces
 
 -- | Parses End-Of-Record tag
 eor :: Parser ()
-eor =
-  try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
+eor = try $ char '<' >> identifier "EOR" >> char '>' >> spaces
 
-
-caseChar :: Stream s m Char => Char -> ParsecT s u m Char
-caseChar c = char (toLower c) <|> char (toUpper c)
-
-caseString :: Stream s m Char => String -> ParsecT s u m ()
-caseString cs = mapM_ caseChar cs <?> cs
+-- | Parses case insensitive identifier
+identifier :: Stream s m Char => String -> ParsecT s u m String
+identifier = mapM (\c -> char (toLower c) <|> char (toUpper c))
