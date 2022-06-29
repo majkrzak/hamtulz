@@ -1,12 +1,10 @@
-{-# LANGUAGE TemplateHaskell #-}
-
-module Data.Adif where
-
+module Data.Adif (Record(..), emptyRecord) where
 
 import GHC.Generics (Generic)
 import Data.Char (toLower)
 import Data.Adif.Definition (qsoFields)
 import Language.Haskell.TH (Dec(DataD,FunD,SigD),Lit(StringL),Clause(Clause),Body(NormalB),Exp(LitE,AppE,ConE) ,Con(RecC), DerivClause(DerivClause), mkName, Bang(Bang), SourceUnpackedness(NoSourceUnpackedness),SourceStrictness(NoSourceStrictness), Type(ConT) )
+
 
 $(pure [
   DataD
@@ -18,14 +16,14 @@ $(pure [
       RecC
         (mkName "Record")
         [
-          (mkName ("_" <> (toLower <$> record)),Bang NoSourceUnpackedness NoSourceStrictness, ConT (mkName "String"))
+          (mkName ("_" <> (toLower <$> record)),Bang NoSourceUnpackedness NoSourceStrictness, ConT ''String)
           | record <- qsoFields
         ]
     ]
     [ DerivClause Nothing
       [
-        ConT (mkName name)
-        | name <- ["Eq", "Show", "Read", "Generic"]
+        ConT name
+        | name <- [''Eq, ''Show, ''Read, ''Generic]
       ]
     ]
   ,SigD (mkName "emptyRecord") (ConT $ mkName "Record")
