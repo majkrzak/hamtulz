@@ -26,12 +26,30 @@ import           Text.Parsec
 import           Text.Parsec.String             ( Parser )
 
 
+file :: Parser [Record]
+file = try $ do
+  _       <- header
+  records <- many parseRecord
+  eof
+  return records
+
 parseRecord :: Parser Record
 parseRecord = try $ do
   fields <- many
     (choice $ map
       (uncurry parseField)
-      $(pure $ ListE [TupE [Just $ LitE $ StringL name, Just $ LamE [VarP $ mkName "x",VarP $ mkName "r"] $ RecUpdE (VarE $ mkName "r") [(mkName ("_" <> (toLower <$> name)), VarE $ mkName "x")] ]  |name <- qsoFields])
+      $(pure $
+        ListE
+          [ TupE
+            [ Just $ LitE $ StringL name
+            , Just $ LamE
+              [ VarP $ mkName "x",VarP $ mkName "r"
+              ] $ RecUpdE (VarE $ mkName "r")
+                [ (mkName ("_" <> (toLower <$> name)), VarE $ mkName "x")
+                ]
+             ] |name <- qsoFields
+          ]
+       )
     )
   eor
   return $ foldl (\r f -> f r) emptyRecord fields
@@ -48,6 +66,11 @@ parseField name set = try $ do
   val <- count (read len) anyChar
   spaces
   return $ set val
+
+header :: Parser ()
+header =
+  try $ void (lookAhead $ try $ char '<') <|> void (manyTill anyChar eoh)
+
 
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
