@@ -3,7 +3,7 @@ module Data.Adif (Record(..), emptyRecord) where
 import GHC.Generics (Generic)
 import Data.Char (toLower)
 import Data.Adif.Definition (qsoFields)
-import Language.Haskell.TH (Dec(DataD,FunD,SigD),Lit(StringL),Clause(Clause),Body(NormalB),Exp(LitE,AppE,ConE) ,Con(RecC), DerivClause(DerivClause), mkName, Bang(Bang), SourceUnpackedness(NoSourceUnpackedness),SourceStrictness(NoSourceStrictness), Type(AppT,ConT) )
+import Language.Haskell.TH (Dec(DataD,FunD,SigD),Clause(Clause),Body(NormalB),Exp(AppE,ConE),Con(RecC),DerivClause(DerivClause),mkName,Bang(Bang),SourceUnpackedness(NoSourceUnpackedness),SourceStrictness(NoSourceStrictness),Type(AppT,ConT) )
 
 
 $(pure

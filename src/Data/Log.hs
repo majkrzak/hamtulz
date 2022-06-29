@@ -2,7 +2,6 @@ module Data.Log where
 
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
-import Data.Yaml.Builder (ToYaml, toYaml)
 
 
 data Record = Record
@@ -75,4 +74,3 @@ data Operator = Operator
   { name :: Maybe String
   , age :: Maybe Int
   } deriving (Eq, Show, Read, Generic)
-
