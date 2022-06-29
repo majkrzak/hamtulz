@@ -13,14 +13,14 @@ adif2log = map record2record
   where
     record2record :: Adif.Record -> Log.Record
     record2record Adif.Record {..} = Log.Record
-      { Log.datetime = parseTimeOrError True defaultTimeLocale "%Y%m%d%H%M%S" (_qso_date <> _time_on) :: UTCTime
+      { Log.datetime = parseTimeOrError True defaultTimeLocale "%Y%m%d%H%M%S" (fromJust _qso_date <> fromJust _time_on) :: UTCTime
       , Log.stations = Just Log.Stations
         { Log.logging = Nothing
         , Log.contacted = Just Log.Station
-          { Log.callsign = Just _call
+          { Log.callsign = _call
           , Log.operator = Nothing
           , Log.location = Just Log.Location
-            { Log.gridsquare = Just _gridsquare
+            { Log.gridsquare = _gridsquare
             , Log.description = Nothing
             }
           , Log.antenna = Nothing
@@ -28,12 +28,12 @@ adif2log = map record2record
           }
         }
       , Log.connection = Just Log.Connection
-        { Log.band = Just $ read _band
-        , Log.mode = Just $ read _mode
-        , Log.frequency = Just $ read _freq
+        { Log.band = read <$> _band
+        , Log.mode = read <$> _mode
+        , Log.frequency = read <$> _freq
         }
       , Log.report = Just Log.Report
-        { Log.sent = Just _rst_sent
-        , Log.rcvd = Just _rst_rcvd
+        { Log.sent = _rst_sent
+        , Log.rcvd = _rst_rcvd
         }
       }

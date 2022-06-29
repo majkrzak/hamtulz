@@ -5,7 +5,7 @@ import Text.Parsec.String (Parser)
 import Data.Adif
 import Control.Monad (void)
 import Data.Char (toUpper, toLower)
-import Language.Haskell.TH (Q, Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE), Lit(StringL), Pat(VarP), mkName)
+import Language.Haskell.TH (Q, Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE,ConE,AppE), Lit(StringL), Pat(VarP), mkName)
 import Data.Adif.Definition (qsoFields)
 
 -- | Parses ADI File
@@ -38,7 +38,11 @@ record = try $ do
             , Just $ LamE
               [ VarP $ mkName "x",VarP $ mkName "r"
               ] $ RecUpdE (VarE $ mkName "r")
-                [ (mkName ("_" <> (toLower <$> name)), VarE $ mkName "x")
+                [ ( mkName ("_" <> (toLower <$> name))
+                  , AppE
+                    (ConE 'Just)
+                    (VarE $ mkName "x")
+                  )
                 ]
              ] |name <- qsoFields
           ]
