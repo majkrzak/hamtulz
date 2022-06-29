@@ -3,10 +3,26 @@
 module Data.Adif where
 
 
-import GHC.Generics (Generic)
-import Data.Char (toLower)
-import Data.Adif.Definition (qsoFields)
-import Language.Haskell.TH (Dec(DataD,FunD,SigD),Lit(StringL),Clause(Clause),Body(NormalB),Exp(LitE,AppE,ConE) ,Con(RecC), DerivClause(DerivClause), mkName, Bang(Bang), SourceUnpackedness(NoSourceUnpackedness),SourceStrictness(NoSourceStrictness), Type(ConT) )
+import           Data.Adif.Definition           ( qsoFields )
+import           Data.Char                      ( toLower )
+import           GHC.Generics                   ( Generic )
+import           Language.Haskell.TH            ( Bang(Bang)
+                                                , Body(NormalB)
+                                                , Clause(Clause)
+                                                , Con(RecC)
+                                                , Dec(DataD, FunD, SigD)
+                                                , DerivClause(DerivClause)
+                                                , Exp(AppE, ConE, LitE)
+                                                , Lit(StringL)
+                                                , SourceStrictness
+                                                  ( NoSourceStrictness
+                                                  )
+                                                , SourceUnpackedness
+                                                  ( NoSourceUnpackedness
+                                                  )
+                                                , Type(ConT)
+                                                , mkName
+                                                )
 
 $(pure [
   DataD
@@ -18,14 +34,14 @@ $(pure [
       RecC
         (mkName "Record")
         [
-          (mkName ("_" <> (toLower <$> record)),Bang NoSourceUnpackedness NoSourceStrictness, ConT (mkName "String"))
+          (mkName ("_" <> (toLower <$> record)),Bang NoSourceUnpackedness NoSourceStrictness, ConT ''String)
           | record <- qsoFields
         ]
     ]
     [ DerivClause Nothing
       [
-        ConT (mkName name)
-        | name <- ["Eq", "Show", "Read", "Generic"]
+        ConT name
+        | name <- [''Eq, ''Show, ''Read, ''Generic]
       ]
     ]
   ,SigD (mkName "emptyRecord") (ConT $ mkName "Record")

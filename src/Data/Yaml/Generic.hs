@@ -10,12 +10,20 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 
-module Data.Yaml.Generic () where
+module Data.Yaml.Generic
+  () where
 
-import GHC.Generics
-import Data.Text (pack, Text)
-import Data.Yaml.Builder (YamlBuilder, ToYaml, toYaml, mapping, string)
-import Data.Data (Proxy(Proxy))
+import           Data.Data                      ( Proxy(Proxy) )
+import           Data.Text                      ( Text
+                                                , pack
+                                                )
+import           Data.Yaml.Builder              ( ToYaml
+                                                , YamlBuilder
+                                                , mapping
+                                                , string
+                                                , toYaml
+                                                )
+import           GHC.Generics
 
 
 class GToYaml f where
@@ -39,14 +47,14 @@ instance (Selector s, GToYaml f) => GToYamlPairs (S1 s f) where
   gToYamlPairs x = [(pack (selName x), gToYaml (unM1 x))]
 
 instance {-# INCOHERENT #-} (Selector s, ToYaml a) => GToYamlPairs (S1 s (K1 i (Maybe a))) where
-  gToYamlPairs (M1 (K1 Nothing)) = []
+  gToYamlPairs (  M1 (K1 Nothing )) = []
   gToYamlPairs x@(M1 (K1 (Just a))) = [(pack (selName x), toYaml a)]
 
 instance (GToYamlPairs x, GToYamlPairs y) => GToYamlPairs (x :*: y) where
   gToYamlPairs (l :*: r) = l' <> r'
-    where
-      l' = gToYamlPairs l
-      r' = gToYamlPairs r
+   where
+    l' = gToYamlPairs l
+    r' = gToYamlPairs r
 
 
 
@@ -59,10 +67,10 @@ instance ToYaml a => GToYaml (K1 R a) where
   gToYaml x = toYaml $ unK1 x
 
 instance Show a => ToYaml' 'ToYamlShow a where
-   toYaml' _ = string . pack . show
+  toYaml' _ = string . pack . show
 
 instance (Generic a, GToYaml (Rep a)) => ToYaml' 'ToYamlGeneric a where
-   toYaml' _ = gToYaml . from
+  toYaml' _ = gToYaml . from
 
 type family FindHowToConvertToYaml rep :: ToYamlMode where
   FindHowToConvertToYaml (D1 _ (_ :+: _)) = 'ToYamlShow

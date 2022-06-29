@@ -1,11 +1,14 @@
 module Data.Yaml.Instances where
 
-import Data.Yaml.Builder (ToYaml, toYaml, string)
+import           Data.Yaml.Builder              ( ToYaml
+                                                , string
+                                                , toYaml
+                                                )
 
 
-import Data.Time (UTCTime)
-import Data.Text (pack)
-import Data.Time.Format.ISO8601 (iso8601Show)
+import           Data.Text                      ( pack )
+import           Data.Time                      ( UTCTime )
+import           Data.Time.Format.ISO8601       ( iso8601Show )
 
 
 

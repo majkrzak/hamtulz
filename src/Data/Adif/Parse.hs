@@ -1,14 +1,17 @@
 module Data.Adif.Parse where
 
-import Prelude()
-import Text.Parsec
-import Text.Parsec.String (Parser)
-import Control.Monad (return, (>>), void)
-import Data.Function (($))
-import Text.Read (read)
-import Data.Char (toLower)
-import Control.Applicative ((<$>))
-import Data.AdifOld
+import           Control.Applicative            ( (<$>) )
+import           Control.Monad                  ( (>>)
+                                                , return
+                                                , void
+                                                )
+import           Data.AdifOld
+import           Data.Char                      ( toLower )
+import           Data.Function                  ( ($) )
+import           Prelude                        ( )
+import           Text.Parsec
+import           Text.Parsec.String             ( Parser )
+import           Text.Read                      ( read )
 
 
 -- | Parses ADI Data-Specifiers
@@ -37,23 +40,25 @@ record = try $ do
 -- | Parses ADI Header
 header :: Parser Header
 header = try $ do
-  text <- manyTill anyChar $ lookAhead (choice [void field, eoh])
+  text   <- manyTill anyChar $ lookAhead (choice [void field, eoh])
   fields <- many field
   eoh
-  return $ Header (text,fields)
+  return $ Header (text, fields)
 
 -- | Parses ADI File
 file :: Parser File
 file = try $ do
   maybeHeader <- optionMaybe header
-  records <- many record
+  records     <- many record
   eof
   return $ File (maybeHeader, records)
 
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
-eoh = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> spaces
+eoh =
+  try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Hh" >> char '>' >> spaces
 
 -- | Parses End-Of-Record tag
 eor :: Parser ()
-eor = try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
+eor =
+  try $ char '<' >> oneOf "Ee" >> oneOf "Oo" >> oneOf "Rr" >> char '>' >> spaces
