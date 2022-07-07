@@ -12,6 +12,7 @@ dependencies:
 - text
 - bytestring
 - template-haskell
+- xdg-basedir
 
 default-extensions:
 - DeriveGeneric
@@ -24,15 +25,15 @@ library:
   source-dirs: src
 
 executables:
-  hamtulz-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+  wsjtx2log:
+    main: Main.hs
+    source-dirs: app/wsjtx2log
     dependencies:
-    - hamtulz
+      - hamtulz
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
 
 tests:
   hamtulz-test:
