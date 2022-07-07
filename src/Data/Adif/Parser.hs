@@ -5,7 +5,7 @@ import Text.Parsec.String (Parser)
 import Data.Adif
 import Control.Monad (void)
 import Data.Char (toUpper, toLower)
-import Language.Haskell.TH (Q, Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE,ConE,AppE), Lit(StringL), Pat(VarP), mkName)
+import Language.Haskell.TH (Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE,ConE,AppE), Lit(StringL), Pat(VarP), mkName)
 import Data.Adif.Definition (qsoFields)
 
 -- | Parses ADI File
@@ -51,6 +51,10 @@ record = try $ do
   eor
   return $ foldl (\r f -> f r) emptyRecord fields
 
+-- | Parses ADI Data-Specifiers
+-- According to the https://www.adif.org/313/ADIF_313.htm#ADI_Data_Specifiers
+-- For given field name and record setter return parser with
+-- setter application over a record.
 field :: String -> (String -> Record -> Record) -> Parser (Record -> Record)
 field name set = try $ do
   void $ char '<'
@@ -62,8 +66,6 @@ field name set = try $ do
   val <- count (read len) anyChar
   spaces
   return $ set val
-
-
 
 -- | Parses End-Of-Header tag
 eoh :: Parser ()
