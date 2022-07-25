@@ -20,6 +20,8 @@ default-extensions:
 - FlexibleContexts
 - LambdaCase
 - TemplateHaskell
+- ScopedTypeVariables
+- StandaloneDeriving
 
 library:
   source-dirs: src
@@ -28,6 +30,15 @@ executables:
   wsjtx2log:
     main: Main.hs
     source-dirs: app/wsjtx2log
+    dependencies:
+      - hamtulz
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+  log2adif:
+    main: Main.hs
+    source-dirs: app/log2adif
     dependencies:
       - hamtulz
     ghc-options:

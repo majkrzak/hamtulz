@@ -5,8 +5,9 @@ import qualified Data.Log as Log
 import Data.Time (formatTime, defaultTimeLocale)
 
 -- | Converts internal log format to ADIF one.
--- With minimal set of fields defined in:
+-- With minimal set of required fields defined in:
 -- https://lotw.arrl.org/lotw-help/submitting-qsos/
+-- and frequency.
 log2adif :: [Log.Record] -> [Adif.Record]
 log2adif = map record2record
   where
@@ -14,8 +15,8 @@ log2adif = map record2record
     record2record r = Adif.emptyRecord
       { Adif._call = pure r >>= Log.stations >>= Log.contacted >>= Log.callsign
       , Adif._qso_date = pure $ formatTime defaultTimeLocale "%Y%m%d" $ Log.datetime r
-      , Adif._time_on = pure $ formatTime defaultTimeLocale "H%M%S" $ Log.datetime r
+      , Adif._time_on = pure $ formatTime defaultTimeLocale "%H%M%S" $ Log.datetime r
       , Adif._band = show <$> (pure r >>= Log.connection >>= Log.band)
-      --, Adif._freq = show <$> (pure r >>= Log.connection >>= Log.frequency)
+      , Adif._freq = show <$> (pure r >>= Log.connection >>= Log.frequency)
       , Adif._mode = show <$> (pure r >>= Log.connection >>= Log.mode)
       }

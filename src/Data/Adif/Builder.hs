@@ -1,14 +1,13 @@
 module Data.Adif.Builder (toAdif) where
 
 import Data.Adif (Record(..))
-import Control.Monad (join)
 import Data.Adif.Definition (qsoFields)
 import Language.Haskell.TH.Syntax (Exp(ListE, TupE, LitE, AppE, VarE), Lit (StringL), mkName)
 import Data.Char (toLower)
 
 
 toAdif :: [Record] -> String
-toAdif records = join (mapM (toAdifRecord . fields) records) <> "<eor>" <> "\n"
+toAdif records = concatMap (toAdifRecord . fields) records <> "<eof>" <> "\n"
   where
     fields record =
       $(pure $
@@ -21,7 +20,7 @@ toAdif records = join (mapM (toAdifRecord . fields) records) <> "<eor>" <> "\n"
        )
 
 toAdifRecord :: [(String, Maybe String)] -> String
-toAdifRecord fields = join (mapM toAdifField fields) <> "<eof>" <> "\n"
+toAdifRecord fields = concatMap toAdifField fields <> "<eor>" <> "\n"
 
 toAdifField :: (String, Maybe String) -> String
 toAdifField (key,Just val) = "<" <> key <> ":" <> show (length val) <> ">" <> val <> " "
