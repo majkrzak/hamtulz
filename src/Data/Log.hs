@@ -30,21 +30,29 @@ data Connection = Connection
   , frequency :: Maybe Double
   } deriving (Eq, Show, Read, Generic)
 
-data Band = Ten | Fifteen | Twenty | Thirty | Forty deriving (Eq, Generic)
+data Band = Six | Ten | Twelve | Fifteen | Seventeen | Twenty | Thirty | Forty | Eighty deriving (Eq, Generic)
 
 instance Show Band where
+  show Six = "6m"
   show Ten = "10m"
+  show Twelve = "12m"
   show Fifteen = "15m"
+  show Seventeen = "17m"
   show Twenty = "20m"
   show Thirty = "30m"
   show Forty = "40m"
+  show Eighty = "80m"
 
 instance Read Band where
+  readsPrec _ "6m" = [(Six, "")]
   readsPrec _ "10m" = [(Ten, "")]
+  readsPrec _ "12m" = [(Twelve, "")]
   readsPrec _ "15m" = [(Fifteen, "")]
+  readsPrec _ "17m" = [(Seventeen, "")]
   readsPrec _ "20m" = [(Twenty, "")]
   readsPrec _ "30m" = [(Thirty, "")]
   readsPrec _ "40m" = [(Forty, "")]
+  readsPrec _ "80m" = [(Eighty, "")]
   readsPrec _ _ = []
 
 data Mode = CW | SSB | FT8 deriving (Eq, Show, Read, Generic)
