@@ -30,9 +30,10 @@ data Connection = Connection
   , frequency :: Maybe Double
   } deriving (Eq, Show, Read, Generic)
 
-data Band = Six | Ten | Twelve | Fifteen | Seventeen | Twenty | Thirty | Forty | Eighty deriving (Eq, Generic)
+data Band = Two | Six | Ten | Twelve | Fifteen | Seventeen | Twenty | Thirty | Forty | Eighty deriving (Eq, Generic)
 
 instance Show Band where
+  show Two = "2m"
   show Six = "6m"
   show Ten = "10m"
   show Twelve = "12m"
@@ -44,6 +45,7 @@ instance Show Band where
   show Eighty = "80m"
 
 instance Read Band where
+  readsPrec _ "2m" = [(Two, "")]
   readsPrec _ "6m" = [(Six, "")]
   readsPrec _ "10m" = [(Ten, "")]
   readsPrec _ "12m" = [(Twelve, "")]
@@ -55,7 +57,7 @@ instance Read Band where
   readsPrec _ "80m" = [(Eighty, "")]
   readsPrec _ _ = []
 
-data Mode = CW | SSB | FT8 deriving (Eq, Show, Read, Generic)
+data Mode = CW | SSB | FM | FT8 deriving (Eq, Show, Read, Generic)
 
 data Report = Report
   { sent :: Maybe String

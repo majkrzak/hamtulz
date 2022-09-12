@@ -3,7 +3,7 @@
     <module name="hamtulz" />
     <option name="allowRunningInParallel" value="false" />
     <option name="executableName" value="wsjtx2log" />
-    <option name="programArgs" value="" />
+    <option name="programArgs" value="$PROJECT_DIR$/../3Z9V/_data/log.yaml" />
     <option name="projectPathOnTarget" />
     <option name="selectedOptions">
       <list />
