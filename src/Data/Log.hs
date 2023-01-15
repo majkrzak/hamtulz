@@ -67,6 +67,12 @@ data Report = Report
 data Location = Location
   { gridsquare :: Maybe String
   , description :: Maybe String
+  , program :: Maybe Program
+  } deriving (Eq, Show, Read, Generic)
+
+data Program = Program
+  { sota :: String
+  , wwff :: String
   } deriving (Eq, Show, Read, Generic)
 
 data Antenna = Antenna
