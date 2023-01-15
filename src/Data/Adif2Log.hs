@@ -20,6 +20,7 @@ adif2log = map record2record
           , Log.location = Just Log.Location
             { Log.gridsquare = Adif._gridsquare r
             , Log.description = Nothing
+            , Log.program = Nothing
             }
           , Log.antenna = Nothing
           , Log.power = Nothing
