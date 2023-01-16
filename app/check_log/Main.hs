@@ -16,6 +16,7 @@ main = do
   print warning
   print (checkOrder records)
   print (checkEmptyGrid records)
+  print (checkEmptyLoggingStation records)
   mempty
 
 checkOrder ::  [Log.Record] -> [String]
@@ -27,3 +28,8 @@ checkEmptyGrid :: [Log.Record] -> [String]
 checkEmptyGrid [] = []
 checkEmptyGrid (Log.Record{datetime=d, connection=Just Log.Connection {mode=Just Log.FT8}, stations=Just Log.Stations{contacted=Just Log.Station{location=Just Log.Location{gridsquare = Just ""}}}}:xs) = ["log from " <> iso8601Show d <> " have empty grid"] <> checkEmptyGrid xs
 checkEmptyGrid (_:xs) = checkEmptyGrid xs
+
+checkEmptyLoggingStation :: [Log.Record] -> [String]
+checkEmptyLoggingStation [] = []
+checkEmptyLoggingStation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Nothing}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station"] <> checkEmptyGrid xs
+checkEmptyLoggingStation (_:xs) = checkEmptyLoggingStation xs
