@@ -17,6 +17,8 @@ main = do
   print (checkOrder records)
   print (checkEmptyGrid records)
   print (checkEmptyLoggingStation records)
+  print (checkEmptyLoggingStationCallsign records)
+  print (checkEmptyLoggingStationLocation records)
   mempty
 
 checkOrder ::  [Log.Record] -> [String]
@@ -33,3 +35,13 @@ checkEmptyLoggingStation :: [Log.Record] -> [String]
 checkEmptyLoggingStation [] = []
 checkEmptyLoggingStation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Nothing}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station"] <> checkEmptyGrid xs
 checkEmptyLoggingStation (_:xs) = checkEmptyLoggingStation xs
+
+checkEmptyLoggingStationCallsign :: [Log.Record] -> [String]
+checkEmptyLoggingStationCallsign [] = []
+checkEmptyLoggingStationCallsign (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{callsign = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station callsign"] <> checkEmptyGrid xs
+checkEmptyLoggingStationCallsign (_:xs) = checkEmptyLoggingStationCallsign xs
+
+checkEmptyLoggingStationLocation :: [Log.Record] -> [String]
+checkEmptyLoggingStationLocation [] = []
+checkEmptyLoggingStationLocation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{location = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station location"] <> checkEmptyGrid xs
+checkEmptyLoggingStationLocation (_:xs) = checkEmptyLoggingStationLocation xs
