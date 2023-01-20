@@ -33,15 +33,15 @@ checkEmptyGrid (_:xs) = checkEmptyGrid xs
 
 checkEmptyLoggingStation :: [Log.Record] -> [String]
 checkEmptyLoggingStation [] = []
-checkEmptyLoggingStation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Nothing}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station"] <> checkEmptyGrid xs
+checkEmptyLoggingStation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Nothing}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station"] <> checkEmptyLoggingStation xs
 checkEmptyLoggingStation (_:xs) = checkEmptyLoggingStation xs
 
 checkEmptyLoggingStationCallsign :: [Log.Record] -> [String]
 checkEmptyLoggingStationCallsign [] = []
-checkEmptyLoggingStationCallsign (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{callsign = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station callsign"] <> checkEmptyGrid xs
+checkEmptyLoggingStationCallsign (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{callsign = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station callsign"] <> checkEmptyLoggingStationCallsign xs
 checkEmptyLoggingStationCallsign (_:xs) = checkEmptyLoggingStationCallsign xs
 
 checkEmptyLoggingStationLocation :: [Log.Record] -> [String]
 checkEmptyLoggingStationLocation [] = []
-checkEmptyLoggingStationLocation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{location = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station location"] <> checkEmptyGrid xs
+checkEmptyLoggingStationLocation (Log.Record{datetime=d, stations=Just Log.Stations{logging=Just Log.Station{location = Nothing}}}:xs) = ["log from " <> iso8601Show d <> " have empty logging station location"] <> checkEmptyLoggingStationLocation xs
 checkEmptyLoggingStationLocation (_:xs) = checkEmptyLoggingStationLocation xs
