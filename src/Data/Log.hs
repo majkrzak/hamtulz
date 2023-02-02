@@ -73,6 +73,7 @@ data Location = Location
 data Program = Program
   { sota :: Maybe String
   , wwff :: Maybe String
+  , wca :: Maybe String
   } deriving (Eq, Show, Read, Generic)
 
 data Antenna = Antenna
