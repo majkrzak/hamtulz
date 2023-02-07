@@ -6,8 +6,14 @@ import Data.Time (UTCTime)
 class Empty a where
   empty :: a
 
+instance Empty Double where
+  empty = 0
+
+instance Empty [a] where
+  empty = []
+
 instance Empty UTCTime where
-  empty = (read "2000-01-01 00:00:00.000000 UTC")
+  empty = read "2000-01-01 00:00:00.000000 UTC"
 
 instance Empty (Maybe a) where
   empty = Nothing
@@ -47,3 +53,29 @@ instance Empty Log.Connection where
     , Log.mode = Nothing
     , Log.frequency = Nothing
     }
+
+instance Empty Log.Operator where
+  empty = Log.Operator
+    { Log.name = Nothing
+    , Log.age = Nothing
+    }
+
+instance Empty Log.Location where
+  empty = Log.Location
+    { Log.gridsquare = Nothing
+    , Log.description = Nothing
+    , Log.program = Nothing
+    }
+
+instance Empty Log.Program where
+  empty = Log.Program
+    { Log.sota = Nothing
+    , Log.wwff = Nothing
+    }
+
+instance Empty Log.Band where
+  empty = Log.Twenty
+
+instance Empty Log.Mode where
+  empty = Log.SSB
+

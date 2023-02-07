@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE PartialTypeSignatures #-}
 
 module Main where
 
@@ -11,12 +12,13 @@ import Data.Log.Lens as Log'
 import Data.Time (getCurrentTime, utctDay, Day, UTCTime, utctDayTime)
 import Data.Time.LocalTime (timeToTimeOfDay, timeOfDayToTime)
 import Data.Text.Lens (packed)
-import Data.Empty (empty)
+import Data.Empty (empty, Empty)
 import System.Environment (getArgs)
 import qualified Data.ByteString.Char8 as BS8
 import Data.Yaml.Builder (toByteString)
 import Data.Yaml.Generic ()
 import Data.Yaml.Instances ()
+import Data.Maybe (isJust)
 
 
 data AppModel = AppModel
@@ -40,6 +42,40 @@ makeLenses 'AppModel
 
 
 
+enablable ::
+ (WidgetEvent e, Empty s, CompositeModel s, CompParentModel s')
+ => ALens' s' (Maybe s)
+ -> WidgetNode s e
+ -> WidgetNode s' e
+enablable lens' widget' =
+  composite
+  "enablable"
+  lens'
+  (\wenv model ->
+    hstack
+     [ checkbox lens''
+     , widgetIf (isJust model) (
+       composite
+       "enablable"
+       (non empty)
+       (\wenv model -> widget')
+       report_up
+     )
+     ]
+  )
+  report_up
+  where
+    lens'' = lens
+                 isJust
+                 (
+                   curry $
+                       \case
+                         (_, False) -> Nothing
+                         (Nothing, True) -> Just empty
+                         (x, True) -> x
+                 )
+    report_up _ _ _ evt = [Report evt]
+
 buildUI
   :: WidgetEnv AppModel AppEvent
   -> AppModel
@@ -56,18 +92,76 @@ buildUI wenv model = widgetTree where
         , button "Now" AppNow
         ]
       , hstack
-        [ label "Callsign"
-        , textField $ record . stations . non empty . contacted . non empty . callsign . non "" . packed
+        [ label "stations"
+        , enablable (record . stations) $
+          vstack
+          [
+            hstack
+            [ label station_label
+            , enablable station_lens $ vstack
+              [ hstack
+                [ label "callsign"
+                , enablable callsign $ textField packed
+                ]
+              , hstack
+                [ label "operator"
+                , enablable operator $ hstack
+                  [ label "name"
+                  , enablable name $ textField packed
+                  ]
+                ]
+              , hstack
+                [ label "location"
+                , enablable location $ vstack
+                  [ hstack
+                    [ label "gridsquare"
+                    , enablable gridsquare $ textField packed
+                    ]
+                  , hstack
+                    [ label "description"
+                    , enablable description $ textField packed
+                    ]
+                  , hstack
+                    [ label "program"
+                    , enablable program $ vstack
+                      [ hstack
+                        [ label "sota"
+                        , enablable sota $ textField packed
+                        ]
+                      , hstack
+                        [ label "wwff"
+                        , enablable wwff $ textField packed
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          | (station_label, station_lens) <- [("logging", logging),("contacted", contacted)] ]
+
         ]
       , hstack
-        [ label "Report sent"
-        , textField $ record . report . non empty . sent . non "" . packed
-        ,  label "rcvd"
-        , textField $ record . report . non empty . rcvd . non "" . packed
+        [ label "connection"
+        , enablable (record . connection) $ vstack
+          [ hstack
+            [ label "frequency"
+            , enablable frequency $ numericField_ id [decimals 5]
+            ]
+          ]
         ]
       , hstack
-        [ label "Frequency"
-        , numericField_ (record . connection . non empty . frequency . non 0) [decimals 5]
+        [ label "report"
+        , enablable (record . report) $ vstack
+          [ hstack
+            [ label "sent"
+            , enablable sent $ textField packed
+            ]
+          , hstack
+            [ label "rcvd"
+            , enablable rcvd $ textField packed
+            ]
+          ]
         ]
       , button "Save" AppSave
       , hstack
@@ -102,9 +196,11 @@ main :: IO ()
 main = do
   [logFile] <- getArgs
   startApp (AppModel logFile empty False False) handleEvent buildUI
-    [ appRenderOnMainThread
-    , appWindowTitle "Contest Log"
+    [ appWindowTitle "Contest Log"
     , appTheme darkTheme
     , appFontDef "Regular" "/usr/share/fonts/TTF/Hack-Regular.ttf"
     , appInitEvent AppInit
     ]
+
+
+data Nut
