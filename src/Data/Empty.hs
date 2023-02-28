@@ -70,7 +70,9 @@ instance Empty Log.Location where
 instance Empty Log.Program where
   empty = Log.Program
     { Log.sota = Nothing
+    , Log.pota = Nothing
     , Log.wwff = Nothing
+    , Log.wca = Nothing
     }
 
 instance Empty Log.Band where
