@@ -3,7 +3,7 @@
     <module name="hamtulz" />
     <option name="allowRunningInParallel" value="false" />
     <option name="executableName" value="log2adif" />
-    <option name="programArgs" value="$PROJECT_DIR$/../3Z9V/_data/log.yaml log.adif" />
+    <option name="programArgs" value="$PROJECT_DIR$/../3Z9V/_data/log.yaml adif/" />
     <option name="projectPathOnTarget" />
     <option name="selectedOptions">
       <list />
