@@ -22,6 +22,8 @@ log2adif = map record2record
       , Adif._mode = show <$> (pure r >>= Log.connection >>= Log.mode)
       , Adif._my_sota_ref = pure r >>= Log.stations >>= Log.logging >>= Log.location >>= Log.program >>= Log.sota
       , Adif._sota_ref = pure r >>= Log.stations >>= Log.contacted >>= Log.location >>= Log.program >>= Log.sota
+      , Adif._my_pota_ref = pure r >>= Log.stations >>= Log.logging >>= Log.location >>= Log.program >>= Log.pota
+      , Adif._pota_ref = pure r >>= Log.stations >>= Log.contacted >>= Log.location >>= Log.program >>= Log.pota
       , Adif._my_wwff_ref = pure r >>= Log.stations >>= Log.logging >>= Log.location >>= Log.program >>= Log.wwff
       , Adif._wwff_ref = pure r >>= Log.stations >>= Log.contacted >>= Log.location >>= Log.program >>= Log.wwff
       }
