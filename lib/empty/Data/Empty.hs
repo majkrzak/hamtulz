@@ -1,7 +1,7 @@
-module Data.Empty (Empty,empty) where
+module Data.Empty (Empty, empty) where
 
-import GHC.Generics
 import Data.Time (UTCTime)
+import GHC.Generics
 
 class GEmpty f where
   gempty :: f a
@@ -21,7 +21,6 @@ instance (GEmpty a, GEmpty b) => GEmpty (a :+: b) where
 instance (GEmpty a) => GEmpty (M1 i c a) where
   gempty = M1 gempty
 
-
 class Empty a where
   empty :: a
   default empty :: (Generic a, GEmpty (Rep a)) => a
@@ -34,7 +33,7 @@ instance Empty [a] where
   empty = []
 
 instance {-# OVERLAPPABLE #-} Num a => Empty a where
-   empty = fromInteger 0
+  empty = 0
 
 instance Empty UTCTime where
   empty = read "1970-01-01 00:00:00.000000 UTC"

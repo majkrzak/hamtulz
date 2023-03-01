@@ -3,20 +3,18 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-
 
 module Data.Yaml.Generic () where
 
+import Data.Data (Proxy (Proxy))
+import Data.Text (Text, pack)
+import Data.Yaml.Builder (ToYaml, YamlBuilder, mapping, string, toYaml)
 import GHC.Generics
-import Data.Text (pack, Text)
-import Data.Yaml.Builder (YamlBuilder, ToYaml, toYaml, mapping, string)
-import Data.Data (Proxy(Proxy))
-
 
 class GToYaml f where
   gToYaml :: f a -> YamlBuilder
@@ -30,7 +28,6 @@ instance (GToYaml x, GToYaml y) => GToYaml (x :+: y) where
 
 instance (GToYamlPairs x, GToYamlPairs y) => GToYaml (C1 c (x :*: y)) where
   gToYaml = mapping . gToYamlPairs . unM1
-
 
 class GToYamlPairs f where
   gToYamlPairs :: f a -> [(Text, YamlBuilder)]
@@ -48,8 +45,6 @@ instance (GToYamlPairs x, GToYamlPairs y) => GToYamlPairs (x :*: y) where
       l' = gToYamlPairs l
       r' = gToYamlPairs r
 
-
-
 data ToYamlMode = ToYamlGeneric | ToYamlShow
 
 class ToYaml' (flag :: ToYamlMode) a where
@@ -59,15 +54,14 @@ instance ToYaml a => GToYaml (K1 R a) where
   gToYaml x = toYaml $ unK1 x
 
 instance Show a => ToYaml' 'ToYamlShow a where
-   toYaml' _ = string . pack . show
+  toYaml' _ = string . pack . show
 
 instance (Generic a, GToYaml (Rep a)) => ToYaml' 'ToYamlGeneric a where
-   toYaml' _ = gToYaml . from
+  toYaml' _ = gToYaml . from
 
 type family FindHowToConvertToYaml rep :: ToYamlMode where
   FindHowToConvertToYaml (D1 _ (_ :+: _)) = 'ToYamlShow
   FindHowToConvertToYaml _ = 'ToYamlGeneric
 
-
-instance {-# OVERLAPPABLE #-}  (ToYaml' (FindHowToConvertToYaml (Rep a)) a) => ToYaml a where
+instance {-# OVERLAPPABLE #-} (ToYaml' (FindHowToConvertToYaml (Rep a)) a) => ToYaml a where
   toYaml = toYaml' (Proxy @(FindHowToConvertToYaml (Rep a)))

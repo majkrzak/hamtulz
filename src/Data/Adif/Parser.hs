@@ -1,19 +1,19 @@
 module Data.Adif.Parser (file, record) where
 
+import Control.Monad (void)
+import Data.Adif
+import Data.Adif.Definition (qsoFields)
+import Data.Char (toLower, toUpper)
+import Language.Haskell.TH (Exp (AppE, ConE, LamE, ListE, LitE, RecUpdE, TupE, VarE), Lit (StringL), Pat (VarP), mkName)
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Data.Adif
-import Control.Monad (void)
-import Data.Char (toUpper, toLower)
-import Language.Haskell.TH (Exp(ListE,TupE,LitE,LamE,RecUpdE,VarE,ConE,AppE), Lit(StringL), Pat(VarP), mkName)
-import Data.Adif.Definition (qsoFields)
 
 -- | Parses ADI File
 -- According to the https://www.adif.org/313/ADIF_313.htm#ADI_File_Format
 -- Return list of Records
 file :: Parser [Record]
 file = try $ do
-  _       <- optionMaybe header
+  _ <- optionMaybe header
   records <- many record
   eof
   return records
@@ -28,26 +28,33 @@ header = try $ void $ manyTill anyChar eoh
 -- User defined fields are not supported yet.
 record :: Parser Record
 record = try $ do
-  fields <- many
-    (choice $ map
-      (uncurry field)
-      $(pure $
-        ListE
-          [ TupE
-            [ Just $ LitE $ StringL name
-            , Just $ LamE
-              [ VarP $ mkName "x",VarP $ mkName "r"
-              ] $ RecUpdE (VarE $ mkName "r")
-                [ ( mkName ("_" <> (toLower <$> name))
-                  , AppE
-                    (ConE 'Just)
-                    (VarE $ mkName "x")
-                  )
-                ]
-             ] |name <- qsoFields
-          ]
-       )
-    )
+  fields <-
+    many
+      ( choice $
+          map
+            (uncurry field)
+            $( pure $
+                 ListE
+                   [ TupE
+                       [ Just $ LitE $ StringL name,
+                         Just
+                           $ LamE
+                             [ VarP $ mkName "x",
+                               VarP $ mkName "r"
+                             ]
+                           $ RecUpdE
+                             (VarE $ mkName "r")
+                             [ ( mkName ("_" <> (toLower <$> name)),
+                                 AppE
+                                   (ConE 'Just)
+                                   (VarE $ mkName "x")
+                               )
+                             ]
+                       ]
+                     | name <- qsoFields
+                   ]
+             )
+      )
   eor
   return $ foldl (\r f -> f r) emptyRecord fields
 

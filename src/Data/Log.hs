@@ -1,35 +1,38 @@
 module Data.Log where
 
+import Data.Empty (Empty)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
-import Data.Empty (Empty)
-
 
 data Record = Record
-  { datetime :: UTCTime
-  , stations :: Maybe Stations
-  , connection :: Maybe Connection
-  , report :: Maybe Report
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { datetime :: UTCTime,
+    stations :: Maybe Stations,
+    connection :: Maybe Connection,
+    report :: Maybe Report
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Stations = Stations
-  { logging :: Maybe Station
-  , contacted :: Maybe Station
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { logging :: Maybe Station,
+    contacted :: Maybe Station
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Station = Station
-  { callsign :: Maybe String
-  , operator :: Maybe Operator
-  , location :: Maybe Location
-  , antenna :: Maybe Antenna
-  , power :: Maybe Int
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { callsign :: Maybe String,
+    operator :: Maybe Operator,
+    location :: Maybe Location,
+    antenna :: Maybe Antenna,
+    power :: Maybe Int
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Connection = Connection
-  { band :: Maybe Band
-  , mode :: Maybe Mode
-  , frequency :: Maybe Double
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { band :: Maybe Band,
+    mode :: Maybe Mode,
+    frequency :: Maybe Double
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Band = Two | Six | Ten | Twelve | Fifteen | Seventeen | Twenty | Thirty | Forty | Eighty deriving (Eq, Generic, Empty)
 
@@ -61,35 +64,41 @@ instance Read Band where
 data Mode = CW | SSB | FM | FT8 deriving (Eq, Show, Read, Generic, Empty)
 
 data Report = Report
-  { sent :: Maybe String
-  , rcvd :: Maybe String
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { sent :: Maybe String,
+    rcvd :: Maybe String
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Location = Location
-  { gridsquare :: Maybe String
-  , description :: Maybe String
-  , program :: Maybe Program
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { gridsquare :: Maybe String,
+    description :: Maybe String,
+    program :: Maybe Program
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Program = Program
-  { sota :: Maybe String
-  , pota :: Maybe String
-  , wwff :: Maybe String
-  , wca :: Maybe String
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { sota :: Maybe String,
+    pota :: Maybe String,
+    wwff :: Maybe String,
+    wca :: Maybe String
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Antenna = Antenna
-  { kind :: Maybe AntennaKind
-  , orientation :: Maybe AntennaOrientation
-  , length :: Maybe Int
-  , azimuth :: Maybe Int
-  , elevation :: Maybe Int
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { kind :: Maybe AntennaKind,
+    orientation :: Maybe AntennaOrientation,
+    length :: Maybe Int,
+    azimuth :: Maybe Int,
+    elevation :: Maybe Int
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data AntennaKind = Delta | Dipole | FoldedDipole | Wire deriving (Eq, Show, Read, Generic)
+
 data AntennaOrientation = Horizontal | Vertical deriving (Eq, Show, Read, Generic)
 
 data Operator = Operator
-  { name :: Maybe String
-  , age :: Maybe Int
-  } deriving (Eq, Show, Read, Generic, Empty)
+  { name :: Maybe String,
+    age :: Maybe Int
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
