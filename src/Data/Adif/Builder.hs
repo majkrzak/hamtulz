@@ -7,7 +7,7 @@ import Data.Char (toLower)
 
 
 toAdif :: [Record] -> String
-toAdif records = concatMap (toAdifRecord . fields) records <> "<eof>" <> "\n"
+toAdif records = concatMap (toAdifRecord . fields) records <> "\n"
   where
     fields record =
       $(pure $
