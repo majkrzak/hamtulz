@@ -29,11 +29,13 @@ default-extensions:
 - ScopedTypeVariables
 - StandaloneDeriving
 - OverloadedStrings
+- ImportQualifiedPost
 
 library:
   source-dirs: src
   dependencies:
-  - empty
+  - hamtulz-empty
+  - hamtulz-adi
 
 executables:
   wsjtx2log:
@@ -68,7 +70,7 @@ executables:
     source-dirs: app/add_log
     dependencies:
       - hamtulz
-      - empty
+      - hamtulz-empty
       - monomer
       - lens
       - text-show
@@ -78,5 +80,8 @@ executables:
       - -with-rtsopts=-N
 
 internal-libraries:
-  empty:
+  hamtulz-empty:
     source-dirs: lib/empty
+  hamtulz-adi:
+    source-dirs: lib/adi
+
