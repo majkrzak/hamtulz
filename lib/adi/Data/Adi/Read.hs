@@ -2,8 +2,8 @@ module Data.Adi.Read () where
 
 import Control.Monad (void)
 import Data.Adi.Model (Document (Document), Field (Field), Header (Header), Record (Record))
-import Data.Char (isDigit, isLetter, toUpper)
-import Text.ParserCombinators.ReadP (ReadP, char, count, eof, get, look, many, manyTill, munch1, sepBy, skipSpaces, (+++))
+import Data.Char (isAscii, isDigit, isLetter, ord, toUpper)
+import Text.ParserCombinators.ReadP (ReadP, between, char, count, eof, get, look, many, many1, manyTill, munch, munch1, satisfy, sepBy, skipSpaces, (+++))
 import Text.ParserCombinators.ReadPrec (readPrec_to_P)
 import Text.Read (lift, readPrec)
 
@@ -26,62 +26,73 @@ instance Read Document where
   readPrec = lift document
 
 field :: ReadP Field
-field = do
+field = trim $ do
   '<' <- char '<'
-  name <- map toUpper <$> munch1 (\c -> isLetter c || c == '_')
+  name <- map toUpper <$> munch1 (\c -> (isAscii c && isLetter c) || c == '_')
   ':' <- char ':'
   len <- read <$> munch1 isDigit
   '>' <- char '>'
   payload <- count len get
-  skipSpaces
   return $ Field (name, payload)
 
 fields :: ReadP [Field]
-fields = many field
+fields = trim $ many field
 
 record :: ReadP Record
-record = do
+record = trim $ do
   fields' <- fields
   eor
-  skipSpaces
   return $ Record fields'
 
 records :: ReadP [Record]
-records = many record
+records = trim $ many record
 
 header :: ReadP Header
-header = do
-  text <- manyTill get (eoh +++ void field)
+header = trim $ do
+  text <- trim string1
   fields' <- fields
   eoh
-  skipSpaces
   return $ Header (text, fields')
 
 maybeHeader :: ReadP (Maybe Header)
 maybeHeader =
   look >>= \case
+    [] -> return Nothing
     ('<' : _) -> return Nothing
     _ -> Just <$> header
 
 document :: ReadP Document
-document = do
+document = trim $ do
   maybeHeader' <- maybeHeader
   records' <- records
   eof
   return $ Document (maybeHeader', records')
 
 eor :: ReadP ()
-eor = do
+eor = trim $ do
   '<' <- char '<'
-  'E' <- toUpper <$> char 'e' +++ char 'E'
-  'O' <- toUpper <$> char 'o' +++ char 'O'
-  'F' <- toUpper <$> char 'f' +++ char 'F'
+  'E' <- toUpper <$> (char 'e' +++ char 'E')
+  'O' <- toUpper <$> (char 'o' +++ char 'O')
+  'R' <- toUpper <$> (char 'r' +++ char 'R')
+  '>' <- char '>'
   return ()
 
 eoh :: ReadP ()
-eoh = do
+eoh = trim $ do
   '<' <- char '<'
-  'E' <- toUpper <$> char 'e' +++ char 'E'
-  'O' <- toUpper <$> char 'o' +++ char 'O'
-  'H' <- toUpper <$> char 'h' +++ char 'H'
+  'E' <- toUpper <$> (char 'e' +++ char 'E')
+  'O' <- toUpper <$> (char 'o' +++ char 'O')
+  'H' <- toUpper <$> (char 'h' +++ char 'H')
+  '>' <- char '>'
   return ()
+
+trim :: ReadP a -> ReadP a
+trim = between skipSpaces skipSpaces
+
+-- an ASCII character whose code lies in the range of 32 through 126, inclusive
+character :: ReadP Char
+character = satisfy (\c -> 32 <= ord c && ord c <= 126)
+
+-- a sequence of Characters
+string1 :: ReadP String
+string1 = many1 character

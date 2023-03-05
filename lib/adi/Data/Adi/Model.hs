@@ -1,9 +1,11 @@
 module Data.Adi.Model (Field (Field), Record (Record), Header (Header), Document (Document)) where
 
-newtype Field = Field (String, String) deriving (Eq)
+import GHC.Generics (Generic)
 
-newtype Record = Record [Field] deriving (Eq)
+newtype Field = Field (String, String) deriving (Eq, Generic)
 
-newtype Header = Header (String, [Field]) deriving (Eq)
+newtype Record = Record [Field] deriving (Eq, Generic)
 
-newtype Document = Document (Maybe Header, [Record]) deriving (Eq)
+newtype Header = Header (String, [Field]) deriving (Eq, Generic)
+
+newtype Document = Document (Maybe Header, [Record]) deriving (Eq, Generic)

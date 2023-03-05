@@ -1,26 +1,26 @@
 module Data.Adi.Show () where
 
 import Data.Adi.Model (Document (Document), Field (Field), Header (Header), Record (Record))
+import Data.List (intercalate)
 
 instance Show Field where
-  show (Field (name, payload)) = "<" <> name <> ":" <> show (length payload) <> ">" <> payload <> " "
+  show (Field (name, payload)) = "<" <> name <> ":" <> show (length payload) <> ">" <> payload
 
 instance {-# OVERLAPPING #-} Show [Field] where
-  show (field : fields) = show field <> " " <> show fields
-  show [] = mempty
+  show fields = intercalate " " $ map show fields
 
 instance Show Record where
-  show (Record fields) = show fields <> "<eor>"
+  show (Record fields) = show fields <> " " <> "<EOR>"
 
 instance {-# OVERLAPPING #-} Show [Record] where
-  show (record : records) = show record <> "\n" <> show records
+  show records = intercalate "\n" $ map show records
 
 instance Show Header where
-  show (Header (free, fields)) = free <> "\n" <> show fields <> "<eoh>"
+  show (Header (free, fields)) = free <> "\n" <> show fields <> "\n" <> "<EOH>"
 
 instance {-# OVERLAPPING #-} Show (Maybe Header) where
   show (Just header) = show header
   show Nothing = mempty
 
 instance Show Document where
-  show (Document (header, records)) = show header <> show records
+  show (Document (header, records)) = show header <> "\n" <> show records <> "\n"
