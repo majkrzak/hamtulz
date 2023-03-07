@@ -36,6 +36,7 @@ library:
   dependencies:
   - hamtulz-empty
   - hamtulz-adi
+  - hamtulz-adif
 
 executables:
   wsjtx2log:
@@ -88,6 +89,11 @@ internal-libraries:
     source-dirs: lib/adi
     dependencies:
     - hamtulz-valid
+  hamtulz-adif:
+    source-dirs: lib/adif
+    dependencies:
+    - hamtulz-adi
+    - hamtulz-empty
 
 tests:
   test-adi:
