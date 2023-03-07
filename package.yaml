@@ -30,6 +30,7 @@ default-extensions:
 - StandaloneDeriving
 - OverloadedStrings
 - ImportQualifiedPost
+- MultiParamTypeClasses
 
 library:
   source-dirs: src
