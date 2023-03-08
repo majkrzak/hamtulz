@@ -1,49 +1,36 @@
 module Data.Adi.Lens (header, records, text, fields, name, payload) where
 
-import Control.Lens (DefName (TopName), Lens', lens, lensField, lensRules, makeLensesWith, (&), (.~), _1)
+import Control.Lens (Lens', Wrapped, lens, _1, _2, _Wrapped')
 import Data.Adi.Model (Document (..), Field (..), Header (..), Record (..))
 
+instance Wrapped Document
+
+instance Wrapped Field
+
+instance Wrapped Header
+
+instance Wrapped Record
+
 header :: Lens' Document (Maybe Header)
-header =
-  lens
-    (\(Document (x, _)) -> x)
-    (\(Document (x, y)) x' -> Document (x', y))
+header = _Wrapped' . _1
 
 records :: Lens' Document [Record]
-records =
-  lens
-    (\(Document (_, y)) -> y)
-    (\(Document (x, y)) y' -> Document (x, y'))
+records = _Wrapped' . _2
 
 text :: Lens' Header String
-text =
-  lens
-    (\(Header (x, _)) -> x)
-    (\(Header (x, y)) x' -> Header (x', y))
+text = _Wrapped' . _1
 
 class HasFields a where
   fields :: Lens' a [Field]
 
 instance HasFields Header where
-  fields =
-    lens
-      (\(Header (_, y)) -> y)
-      (\(Header (x, y)) y' -> Header (x, y'))
+  fields = _Wrapped' . _2
 
 instance HasFields Record where
-  fields =
-    lens
-      (\(Record x) -> x)
-      (\(Record x) x' -> Record x')
+  fields = _Wrapped'
 
 name :: Lens' Field String
-name =
-  lens
-    (\(Field (x, _)) -> x)
-    (\(Field (x, y)) x' -> Field (x', y))
+name = _Wrapped' . _1
 
 payload :: Lens' Field String
-payload =
-  lens
-    (\(Field (_, y)) -> y)
-    (\(Field (x, y)) y' -> Field (x, y'))
+payload = _Wrapped' . _2
