@@ -1,4 +1,4 @@
-module Data.Adif.Model (Document(..), Header(), Record(..)) where
+module Data.Adif.Model (Document (..), Header (), Record (..)) where
 
 import Data.Adif.Definition (headerFields, recordFields)
 import Data.Adif.TH (mkFieldName)
@@ -8,31 +8,31 @@ import GHC.Generics (Generic)
 import Language.Haskell.TH (Bang (Bang), Body (NormalB), Clause (Clause), Con (RecC), Dec (DataD, FunD, SigD), DerivClause (DerivClause), Exp (AppE, ConE), SourceStrictness (NoSourceStrictness), SourceUnpackedness (NoSourceUnpackedness), Type (AppT, ConT), mkName)
 
 $( pure
-     [
-        DataD
+     [ DataD
          []
          (mkName "Header")
          []
          Nothing
          [ RecC
              (mkName "Header")
-             ((mkName "text", Bang NoSourceUnpackedness NoSourceStrictness, ConT ''String) :
-             [ ( mkFieldName record,
-                 Bang NoSourceUnpackedness NoSourceStrictness,
-                 AppT
-                   (ConT ''Maybe)
-                   (ConT ''String)
-               )
-               | record <- headerFields
-             ])
+             ( (mkName "text", Bang NoSourceUnpackedness NoSourceStrictness, ConT ''String)
+                 : [ ( mkFieldName record,
+                       Bang NoSourceUnpackedness NoSourceStrictness,
+                       AppT
+                         (ConT ''Maybe)
+                         (ConT ''String)
+                     )
+                     | record <- headerFields
+                   ]
+             )
          ]
          [ DerivClause
              Nothing
              [ ConT name
                | name <- [''Eq, ''Show, ''Read, ''Generic, ''Empty]
              ]
-         ]
-     , DataD
+         ],
+       DataD
          []
          (mkName "Record")
          []
@@ -54,10 +54,11 @@ $( pure
                | name <- [''Eq, ''Show, ''Read, ''Generic, ''Empty]
              ]
          ]
-         ]
+     ]
  )
 
-data Document = Document {
-    header :: Maybe Header,
+data Document = Document
+  { header :: Maybe Header,
     records :: [Record]
-} deriving (Eq, Show, Read, Generic, Empty)
+  }
+  deriving (Eq, Show, Read, Generic, Empty)

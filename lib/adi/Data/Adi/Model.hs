@@ -1,7 +1,6 @@
 module Data.Adi.Model (Field (Field), Record (Record), Header (Header), Document (Document)) where
 
 import Data.Empty (Empty)
-
 import GHC.Generics (Generic)
 
 newtype Field = Field (String, String) deriving (Eq, Generic, Empty)
