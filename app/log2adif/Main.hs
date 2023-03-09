@@ -1,7 +1,7 @@
 module Main where
 
 import Control.Lens ((^.), (^?), (^?!), _Just)
-import Data.Adif.Builder (toAdif)
+import Data.Adif (toAdi)
 import Data.List (groupBy)
 import Data.Log as Log
 import Data.Log.Lens as Log'
@@ -18,9 +18,9 @@ main = do
   [logFile, adifFile] <- getArgs
   records :: [Log.Record] <- decodeFileThrow logFile
 
-  mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (toAdif $ log2adif records')) (callsignRecords records)
-  mapM_ (\records' -> writeFile (adifFile ++ sotaFileName (head records')) (toAdif $ log2adif records')) (sotaRecords records)
-  mapM_ (\records' -> writeFile (adifFile ++ potaFileName (head records')) (toAdif $ log2adif records')) (potaRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (show $ toAdi $ log2adif records')) (callsignRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ sotaFileName (head records')) (show $ toAdi $ log2adif records')) (sotaRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ potaFileName (head records')) (show $ toAdi $ log2adif records')) (potaRecords records)
 
 callsignFileName :: Log.Record -> String
 callsignFileName record =

@@ -4,6 +4,8 @@ import Data.Adif qualified as Adif
 import Data.Log qualified as Log
 import Data.Maybe (fromJust)
 import Data.Time (UTCTime, defaultTimeLocale, parseTimeOrError)
+import Data.Empty (empty)
+import Control.Lens ((^.))
 
 adif2log :: [Adif.Record] -> [Log.Record]
 adif2log = map record2record
@@ -11,7 +13,7 @@ adif2log = map record2record
     record2record :: Adif.Record -> Log.Record
     record2record r =
       Log.Record
-        { Log.datetime = parseTimeOrError True defaultTimeLocale "%Y%m%d%H%M%S" (fromJust (Adif._qso_date r) <> fromJust (Adif._time_on r)) :: UTCTime,
+        { Log.datetime = parseTimeOrError True defaultTimeLocale "%Y%m%d%H%M%S" (fromJust (r ^. Adif._qso_date) <> fromJust (r ^. Adif._time_on)) :: UTCTime,
           Log.stations =
             Just
               Log.Stations
@@ -19,12 +21,12 @@ adif2log = map record2record
                   Log.contacted =
                     Just
                       Log.Station
-                        { Log.callsign = Adif._call r,
+                        { Log.callsign = r ^. Adif._call,
                           Log.operator = Nothing,
                           Log.location =
                             Just
                               Log.Location
-                                { Log.gridsquare = Adif._gridsquare r,
+                                { Log.gridsquare = r ^. Adif._gridsquare,
                                   Log.description = Nothing,
                                   Log.program = Nothing
                                 },
@@ -35,14 +37,14 @@ adif2log = map record2record
           Log.connection =
             Just
               Log.Connection
-                { Log.band = read <$> Adif._band r,
-                  Log.mode = read <$> Adif._mode r,
-                  Log.frequency = read <$> Adif._freq r
+                { Log.band = read <$> r ^. Adif._band,
+                  Log.mode = read <$> r ^. Adif._mode,
+                  Log.frequency = read <$> r ^. Adif._freq
                 },
           Log.report =
             Just
               Log.Report
-                { Log.sent = Adif._rst_sent r,
-                  Log.rcvd = Adif._rst_rcvd r
+                { Log.sent = r ^.Adif._rst_sent,
+                  Log.rcvd = r ^. Adif._rst_rcvd
                 }
         }

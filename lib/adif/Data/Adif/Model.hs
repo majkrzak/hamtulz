@@ -1,6 +1,7 @@
 module Data.Adif.Model (Document(..), Header(), Record(..)) where
 
 import Data.Adif.Definition (headerFields, recordFields)
+import Data.Adif.TH (mkFieldName)
 import Data.Char (toLower)
 import Data.Empty (Empty)
 import GHC.Generics (Generic)
@@ -15,14 +16,15 @@ $( pure
          Nothing
          [ RecC
              (mkName "Header")
-             [ ( mkName ("_" <> (toLower <$> record)),
+             ((mkName "text", Bang NoSourceUnpackedness NoSourceStrictness, ConT ''String) :
+             [ ( mkFieldName record,
                  Bang NoSourceUnpackedness NoSourceStrictness,
                  AppT
                    (ConT ''Maybe)
                    (ConT ''String)
                )
                | record <- headerFields
-             ]
+             ])
          ]
          [ DerivClause
              Nothing
@@ -37,7 +39,7 @@ $( pure
          Nothing
          [ RecC
              (mkName "Record")
-             [ ( mkName ("_" <> (toLower <$> record)),
+             [ ( mkFieldName record,
                  Bang NoSourceUnpackedness NoSourceStrictness,
                  AppT
                    (ConT ''Maybe)
@@ -56,6 +58,6 @@ $( pure
  )
 
 data Document = Document {
-    _header :: Maybe Header,
-    _records :: [Record]
+    header :: Maybe Header,
+    records :: [Record]
 } deriving (Eq, Show, Read, Generic, Empty)
