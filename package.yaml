@@ -31,11 +31,13 @@ default-extensions:
 - OverloadedStrings
 - ImportQualifiedPost
 - MultiParamTypeClasses
+- RankNTypes
 
 library:
   source-dirs: src
   dependencies:
   - hamtulz-empty
+  - hamtulz-lens-helper
   - hamtulz-adi
   - hamtulz-adif
 
@@ -89,6 +91,10 @@ internal-libraries:
     source-dirs: lib/valid
   hamtulz-empty:
     source-dirs: lib/empty
+  hamtulz-lens-helper:
+    source-dirs: lib/lens-helper
+    dependencies:
+    - hamtulz-empty
   hamtulz-adi:
     source-dirs: lib/adi
     dependencies:
