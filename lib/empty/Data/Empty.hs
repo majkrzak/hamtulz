@@ -32,7 +32,7 @@ instance Empty (Maybe a) where
 instance Empty [a] where
   empty = []
 
-instance (Empty a1, Empty a2) => Empty (a1,a2) where
+instance (Empty a1, Empty a2) => Empty (a1, a2) where
   empty = (empty, empty)
 
 instance {-# OVERLAPPABLE #-} Num a => Empty a where

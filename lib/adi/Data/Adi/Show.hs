@@ -1,13 +1,13 @@
 module Data.Adi.Show () where
 
 import Data.Adi.Model (Document (Document), Field (Field), Header (Header), Record (Record))
-import Data.List (intercalate)
+import Data.List (intercalate, unwords)
 
 instance Show Field where
   show (Field (name, payload)) = "<" <> name <> ":" <> show (length payload) <> ">" <> payload
 
 instance {-# OVERLAPPING #-} Show [Field] where
-  show fields = intercalate " " $ map show fields
+  show fields = unwords $ map show fields
 
 instance Show Record where
   show (Record fields) = show fields <> " " <> "<EOR>"

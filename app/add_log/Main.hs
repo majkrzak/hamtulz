@@ -7,7 +7,6 @@ import Control.Lens
 import Data.ByteString.Char8 qualified as BS8
 import Data.Empty (Empty, empty)
 import Data.Log qualified as Log
-import Data.Log.Lens as Log'
 import Data.Maybe (isJust)
 import Data.Text.Lens (packed)
 import Data.Time (Day, UTCTime, getCurrentTime, utctDay, utctDayTime)

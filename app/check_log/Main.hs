@@ -1,7 +1,6 @@
 module Main where
 
 import Data.Log qualified as Log
-import Data.Log.Lens qualified as Log'
 import Data.Time.Format.ISO8601 (iso8601Show)
 import Data.Yaml (decodeFileWithWarnings)
 import Data.Yaml.AesonInstances ()

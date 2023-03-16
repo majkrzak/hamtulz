@@ -4,8 +4,8 @@ import Control.Lens (Lens', lens, set, view, (^.))
 import Control.Lens.Helper (maybe', mrs, (°), (·))
 import Data.Adif qualified as Adif
 import Data.Empty (Empty, empty)
-import Data.Log qualified as Log
 import Data.Log.Lens qualified as Log'
+import Data.Log.Model qualified as Log
 import Data.Maybe (fromJust)
 import Data.Time (UTCTime, defaultTimeLocale, formatTime, parseTimeOrError, utctDay, utctDayTime)
 
