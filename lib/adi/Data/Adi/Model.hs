@@ -1,4 +1,10 @@
-module Data.Adi.Model (Field (Field), Record (Record), Header (Header), Document (Document)) where
+module Data.Adi.Model
+  ( Field (..),
+    Record (..),
+    Header (..),
+    Document (..),
+  )
+where
 
 import Data.Empty (Empty)
 import GHC.Generics (Generic)

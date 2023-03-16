@@ -1,4 +1,9 @@
-module Data.Adif.Model (Document (..), Header (), Record (..)) where
+module Data.Adif.Model
+  ( Document (..),
+    Header (),
+    Record (..),
+  )
+where
 
 import Data.Adif.Definition (headerFields, recordFields)
 import Data.Adif.TH (mkFieldName)
