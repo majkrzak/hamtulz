@@ -1,4 +1,4 @@
-module Data.Log.Adif (toAdif, fromAdif) where
+module Data.Log.Conversion.Adif (toAdif, fromAdif) where
 
 import Control.Lens (Lens', lens, set, view, (^.))
 import Control.Lens.Helper (maybe', mrs, (°), (·))

@@ -1,4 +1,9 @@
-module Data.Adif (Document, Header, Record, module Data.Adif.Lens, toAdi, fromAdi) where
+module Data.Adif
+  ( module Data.Adif.Conversion.Adi,
+    module Data.Adif.Lens,
+    module Data.Adif.Model,
+  )
+where
 
 import Data.Adif.Conversion.Adi (fromAdi, toAdi)
 import Data.Adif.Lens

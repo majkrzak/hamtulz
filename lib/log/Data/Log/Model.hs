@@ -1,4 +1,14 @@
-module Data.Log.Model where
+module Data.Log.Model
+  ( Connection (..),
+    Location (..),
+    Operator (..),
+    Program (..),
+    Record (..),
+    Report (..),
+    Station (..),
+    Stations (..),
+  )
+where
 
 import Data.Empty (Empty)
 import Data.Log.Enum (Band, Mode)

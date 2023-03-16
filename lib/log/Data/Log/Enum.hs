@@ -1,4 +1,8 @@
-module Data.Log.Enum where
+module Data.Log.Enum
+  ( Band (..),
+    Mode (..),
+  )
+where
 
 import Data.Empty (Empty)
 import GHC.Generics (Generic)

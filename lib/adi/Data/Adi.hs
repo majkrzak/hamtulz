@@ -1,6 +1,10 @@
-module Data.Adi (Field, Record, Header, Document, header, records, text, fields, name, payload) where
+module Data.Adi
+  ( module Data.Adi.Lens,
+    module Data.Adi.Model,
+  )
+where
 
-import Data.Adi.Lens (fields, header, name, payload, records, text)
+import Data.Adi.Lens
 import Data.Adi.Model (Document, Field, Header, Record)
 import Data.Adi.Read ()
 import Data.Adi.Show ()
