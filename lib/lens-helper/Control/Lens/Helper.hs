@@ -7,7 +7,7 @@ import Data.Empty (Empty, empty)
 (·) :: [a -> a] -> a -> a
 (·) = foldl (.) id
 
-infix 4 ·
+infix 5 ·
 
 -- | Compose "non empty" Lenses
 (°) :: (Empty b, Eq b) => Lens' a (Maybe b) -> Lens' b c -> Lens' a c

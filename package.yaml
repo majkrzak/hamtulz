@@ -60,6 +60,8 @@ executables:
     dependencies:
     - hamtulz
     - hamtulz-adif
+    - hamtulz-lens-helper
+    - hamtulz-empty
     ghc-options:
     - -threaded
     - -rtsopts

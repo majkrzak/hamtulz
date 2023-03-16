@@ -1,11 +1,13 @@
 module Main where
 
-import Control.Lens ((^.), (^?), (^?!), _Just)
-import Data.Adif (toAdi)
+import Control.Lens ((.~), (?~), (^.), (^?), (^?!), _Just)
+import Control.Lens.Helper ((·))
+import Data.Adif qualified as Adif
+import Data.Empty (empty)
 import Data.List (groupBy)
 import Data.Log as Log
+import Data.Log.Adif (toAdif)
 import Data.Log.Lens as Log'
-import Data.Log2Adif (log2adif)
 import Data.Maybe (fromMaybe, isJust)
 import Data.Time (utctDay)
 import Data.Time.Format.ISO8601 (iso8601Show)
@@ -18,9 +20,21 @@ main = do
   [logFile, adifFile] <- getArgs
   records :: [Log.Record] <- decodeFileThrow logFile
 
-  mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (show $ toAdi $ log2adif records')) (callsignRecords records)
-  mapM_ (\records' -> writeFile (adifFile ++ sotaFileName (head records')) (show $ toAdi $ log2adif records')) (sotaRecords records)
-  mapM_ (\records' -> writeFile (adifFile ++ potaFileName (head records')) (show $ toAdi $ log2adif records')) (potaRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (callsignRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ sotaFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (sotaRecords records)
+  mapM_ (\records' -> writeFile (adifFile ++ potaFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (potaRecords records)
+
+makeAdif :: [Log.Record] -> Adif.Document
+makeAdif records =
+  [ Adif.header
+      ?~ ( [ Adif.text .~ "Hamtulz generated log file",
+             Adif._adif_ver ?~ "3.1.4"
+           ]
+             · empty
+         ),
+    Adif.records .~ toAdif records
+  ]
+    · empty
 
 callsignFileName :: Log.Record -> String
 callsignFileName record =
