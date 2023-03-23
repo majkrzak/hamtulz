@@ -43,7 +43,7 @@ converters =
     (Log'.report ° Log'.rcvd, Adif._rst_rcvd),
     -- Connection
     (Log'.connection ° Log'.band . mrs, Adif._band),
-    (Log'.connection ° Log'.mode . mrs, Adif._band),
+    (Log'.connection ° Log'.mode . mrs, Adif._mode),
     (Log'.connection ° Log'.frequency . mrs, Adif._freq),
     -- Programs
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.sota, Adif._my_sota_ref),
