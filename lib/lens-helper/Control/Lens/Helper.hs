@@ -5,7 +5,7 @@ import Data.Empty (Empty, empty)
 
 -- | Compose list of setters against value
 (·) :: [a -> a] -> a -> a
-(·) = foldl (.) id
+(·) = foldr (flip (.)) id
 
 infix 5 ·
 

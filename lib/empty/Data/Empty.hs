@@ -38,5 +38,8 @@ instance (Empty a1, Empty a2) => Empty (a1, a2) where
 instance {-# OVERLAPPABLE #-} Num a => Empty a where
   empty = 0
 
+instance Empty Bool where
+  empty = minBound
+
 instance Empty UTCTime where
   empty = read "1970-01-01 00:00:00.000000 UTC"
