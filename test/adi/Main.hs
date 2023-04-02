@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Adi
-import Data.Valid
+import Data.Valid (valid)
 import Test.QuickCheck (Arbitrary, arbitrary)
 import Test.Tasty
 import Test.Tasty.HUnit as HU
