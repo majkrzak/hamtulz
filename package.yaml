@@ -83,7 +83,19 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-
+  check_log:
+    main: Main.hs
+    source-dirs: app/check_log
+    dependencies:
+    - hamtulz
+    - hamtulz-lens-helper
+    - hamtulz-empty
+    - hamtulz-log
+    - hamtulz-valid
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
 
 internal-libraries:
   hamtulz-valid:
