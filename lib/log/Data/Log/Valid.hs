@@ -3,13 +3,11 @@ module Data.Log.Valid () where
 import Data.Function (fix)
 import Data.Log.Model
 import Data.Time.Format.ISO8601 (iso8601Show)
-import Data.Valid (Valid, mkGroup, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkValidator, validator)
+import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkValidator, validator)
 
 instance Valid [Record] where
   validator =
-    mkGroup
-      (const "")
-      id
+    mconcat
       [ mkValidator
           "timestamps not in increesing order"
           ( fix
@@ -25,45 +23,40 @@ instance Valid [Record] where
 
 instance Valid Record where
   validator =
-    mkGroup
-      (\a -> "@" <> iso8601Show (datetime a))
-      id
-      [ mkGroup
-          (const "stations")
-          stations
-          [ mkValidator "is empty" null,
-            mkMaybeRecursiveValidator "?" id
-          ]
-      ]
+    mkLabel (\a -> "@" <> iso8601Show (datetime a)) $
+      mconcat
+        [ mkLabel (const "stations") $
+            mkNested stations $
+              mconcat
+                [ mkValidator "is empty" null,
+                  mkMaybeRecursiveValidator "?" id
+                ]
+        ]
 
 instance Valid Stations where
   validator =
-    mkGroup
-      (const "")
-      id
-      [ mkGroup
-          (const "logging")
-          logging
-          [ mkValidator "is empty" null,
-            mkMaybeRecursiveValidator "?" id
-          ],
-        mkGroup
-          (const "contacted")
-          logging
-          [ mkValidator "is empty" null,
-            mkMaybeRecursiveValidator "?" id
-          ]
+    mconcat
+      [ mkLabel (const "logging") $
+          mkNested logging $
+            mconcat
+              [ mkValidator "is empty" null,
+                mkMaybeRecursiveValidator "?" id
+              ],
+        mkLabel (const "contacted") $
+          mkNested logging $
+            mconcat
+              [ mkValidator "is empty" null,
+                mkMaybeRecursiveValidator "?" id
+              ]
       ]
 
 instance Valid Station where
   validator =
-    mkGroup
-      (const "")
-      id
-      [ mkGroup
-          (const "callsign")
-          callsign
-          [ mkValidator "is empty" null,
-            mkMaybeValidator "is empty" null
-          ]
+    mconcat
+      [ mkLabel (const "callsign") $
+          mkNested callsign $
+            mconcat
+              [ mkValidator "is empty" null,
+                mkMaybeValidator "is empty" null
+              ]
       ]
