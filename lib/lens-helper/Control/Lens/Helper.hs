@@ -1,6 +1,7 @@
 module Control.Lens.Helper ((·), (°), mrs, maybe') where
 
-import Control.Lens (ALens', Lens', lens, non)
+import Control.Lens (ALens', Lens', coerced, lens, non)
+import Data.Coerce (Coercible)
 import Data.Empty (Empty, empty)
 
 -- | Compose list of setters against value
@@ -10,8 +11,8 @@ import Data.Empty (Empty, empty)
 infix 5 ·
 
 -- | Compose "non empty" Lenses
-(°) :: (Empty b, Eq b) => Lens' a (Maybe b) -> Lens' b c -> Lens' a c
-lhs ° rhs = lhs . non empty . rhs
+(°) :: (Empty b, Eq b, Coercible b c) => Lens' a (Maybe b) -> Lens' c d -> Lens' a d
+lhs ° rhs = lhs . non empty . coerced . rhs
 
 infixr 9 °
 

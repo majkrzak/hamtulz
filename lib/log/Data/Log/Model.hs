@@ -6,6 +6,8 @@ module Data.Log.Model
     Record (..),
     Report (..),
     Station (..),
+    Logging (..),
+    Contacted (..),
     Stations (..),
   )
 where
@@ -24,10 +26,14 @@ data Record = Record
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Stations = Stations
-  { logging :: Maybe Station,
-    contacted :: Maybe Station
+  { logging :: Maybe Logging,
+    contacted :: Maybe Contacted
   }
   deriving (Eq, Show, Read, Generic, Empty)
+
+newtype Logging = Logging Station deriving (Eq, Show, Read, Generic, Empty)
+
+newtype Contacted = Contacted Station deriving (Eq, Show, Read, Generic, Empty)
 
 data Station = Station
   { callsign :: Maybe String,

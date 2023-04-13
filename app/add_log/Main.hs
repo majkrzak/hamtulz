@@ -161,7 +161,18 @@ buildUI wenv model = widgetTree
                                 ]
                             ]
                       ]
-                    | (station_label, station_lens) <- [("logging", logging), ("contacted", contacted)]
+                    | (station_label, station_lens) <-
+                        [ ( "logging",
+                            lens -- FIXME
+                              undefined
+                              undefined
+                          ),
+                          ( "contacted",
+                            lens -- FIXME
+                              undefined
+                              undefined
+                          )
+                        ]
                   ]
             ],
           hstack

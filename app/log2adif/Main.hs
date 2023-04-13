@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Lens ((.~), (?~), (^.), (^?), (^?!), _Just)
+import Control.Lens ((.~), (?~), (^.), (^?), (^?!), _Just, coerced)
 import Control.Lens.Helper ((·))
 import Data.Adif qualified as Adif
 import Data.Empty (empty)
@@ -36,7 +36,7 @@ makeAdif records =
 
 callsignFileName :: Log.Record -> String
 callsignFileName record =
-  safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . Log.callsign . _Just)) ++ ".adif"
+  safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)) ++ ".adif"
 
 callsignRecords :: [Log.Record] -> [[Log.Record]]
 callsignRecords = groupBy (\r1 r2 -> callsignFileName r1 == callsignFileName r2)
@@ -48,16 +48,16 @@ sotaFileName record =
       "/",
       iso8601Show (utctDay (record ^. Log.datetime)),
       "_",
-      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . Log.callsign . _Just)),
+      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)),
       "_",
-      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . Log.location . _Just . Log.program . _Just . Log.sota . _Just))),
+      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.sota . _Just))),
       ".adif"
     ]
 
 sotaFilter :: Log.Record -> Bool
 sotaFilter record =
-  isJust (record ^? (Log.stations . _Just . Log.logging . _Just . Log.location . _Just . Log.program . _Just . Log.sota . _Just))
-    || isJust (record ^? (Log.stations . _Just . Log.contacted . _Just . Log.location . _Just . Log.program . _Just . Log.sota . _Just))
+  isJust (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.sota . _Just))
+    || isJust (record ^? (Log.stations . _Just . Log.contacted . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.sota . _Just))
 
 sotaRecords :: [Log.Record] -> [[Log.Record]]
 sotaRecords = groupBy (\r1 r2 -> sotaFileName r1 == sotaFileName r2) . filter sotaFilter
@@ -69,16 +69,16 @@ potaFileName record =
       "/",
       iso8601Show (utctDay (record ^. Log.datetime)),
       "_",
-      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . Log.callsign . _Just)),
+      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)),
       "_",
-      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . Log.location . _Just . Log.program . _Just . Log.pota . _Just))),
+      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.pota . _Just))),
       ".adif"
     ]
 
 potaFilter :: Log.Record -> Bool
 potaFilter record =
-  isJust (record ^? (Log.stations . _Just . Log.logging . _Just . Log.location . _Just . Log.program . _Just . Log.pota . _Just))
-    || isJust (record ^? (Log.stations . _Just . Log.contacted . _Just . Log.location . _Just . Log.program . _Just . Log.pota . _Just))
+  isJust (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.pota . _Just))
+    || isJust (record ^? (Log.stations . _Just . Log.contacted . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.pota . _Just))
 
 potaRecords :: [Log.Record] -> [[Log.Record]]
 potaRecords = groupBy (\r1 r2 -> potaFileName r1 == potaFileName r2) . filter potaFilter

@@ -29,6 +29,9 @@ instance (GToYaml x, GToYaml y) => GToYaml (x :+: y) where
 instance (GToYamlPairs x, GToYamlPairs y) => GToYaml (C1 c (x :*: y)) where
   gToYaml = mapping . gToYamlPairs . unM1
 
+instance (Selector s, ToYaml f) => GToYaml (C1 c (S1 s (K1 r f))) where
+  gToYaml (M1 (M1 (K1 x))) = toYaml x
+
 class GToYamlPairs f where
   gToYamlPairs :: f a -> [(Text, YamlBuilder)]
 

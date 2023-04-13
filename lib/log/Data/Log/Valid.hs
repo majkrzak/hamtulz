@@ -1,9 +1,10 @@
 module Data.Log.Valid () where
 
+import Data.Coerce (coerce)
 import Data.Function (fix)
 import Data.Log.Model
 import Data.Time.Format.ISO8601 (iso8601Show)
-import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkValidator, mkValidatorComment, validator)
+import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkRecursiveValidator, mkValidator, mkValidatorComment, validator)
 
 instance Valid [Record] where
   validator =
@@ -54,6 +55,14 @@ instance Valid Stations where
                 mkMaybeRecursiveValidator "?" id
               ]
       ]
+
+instance Valid Logging where
+  validator =
+    mkRecursiveValidator "" (coerce :: (Logging -> Station))
+
+instance Valid Contacted where
+  validator =
+    mkRecursiveValidator "" (coerce :: (Contacted -> Station))
 
 instance Valid Station where
   validator =
