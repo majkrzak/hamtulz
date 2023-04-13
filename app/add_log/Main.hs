@@ -23,7 +23,8 @@ data Template
 
 data Remember = Remember
   { _rememberDate :: Bool,
-    _rememberReport :: Bool
+    _rememberReport :: Bool,
+    _rememberConnection :: Bool
   }
   deriving (Eq, Show, Generic, Empty)
 
@@ -192,7 +193,9 @@ buildUI wenv model = widgetTree
             [ label "Remember Date",
               checkbox $ remember . rememberDate,
               label "Remember Report",
-              checkbox $ remember . rememberReport
+              checkbox $ remember . rememberReport,
+              label "Remember Connection",
+              checkbox $ remember . rememberConnection
             ],
           hstack
             [ label "Template",
@@ -222,7 +225,8 @@ handleEvent wenv node model evt = case evt of
     [ Model
         ( [ record .~ toRecord (model ^. template),
             if model ^. remember . rememberDate then record . datetime .~ (model ^. record . datetime) else id,
-            if model ^. remember . rememberReport then record . report .~ (model ^. record . report) else id
+            if model ^. remember . rememberReport then record . report .~ (model ^. record . report) else id,
+            if model ^. remember . rememberConnection then record . connection .~ (model ^. record . connection) else id
           ]
             · model
         )

@@ -3,19 +3,18 @@ module Data.Log.Valid () where
 import Data.Function (fix)
 import Data.Log.Model
 import Data.Time.Format.ISO8601 (iso8601Show)
-import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkValidator, validator)
+import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkValidator, mkValidatorComment, validator)
 
 instance Valid [Record] where
   validator =
     mconcat
-      [ mkValidator
-          "timestamps not in increesing order"
+      [ mkValidatorComment
           ( fix
               ( \f ->
                   \case
-                    r1 : r2 : rs -> datetime r1 >= datetime r2 || f rs
-                    [r] -> False
-                    [] -> False
+                    r1 : r2 : rs -> if datetime r1 >= datetime r2 then Just ("timestamps not in increesing order @" <> iso8601Show (datetime r2)) else f (r2 : rs)
+                    [r] -> Nothing
+                    [] -> Nothing
               )
           ),
         mkListRecursiveValidator "[]" id
@@ -27,6 +26,12 @@ instance Valid Record where
       mconcat
         [ mkLabel (const "stations") $
             mkNested stations $
+              mconcat
+                [ mkValidator "is empty" null,
+                  mkMaybeRecursiveValidator "?" id
+                ],
+          mkLabel (const "connection") $
+            mkNested connection $
               mconcat
                 [ mkValidator "is empty" null,
                   mkMaybeRecursiveValidator "?" id
@@ -43,7 +48,7 @@ instance Valid Stations where
                 mkMaybeRecursiveValidator "?" id
               ],
         mkLabel (const "contacted") $
-          mkNested logging $
+          mkNested contacted $
             mconcat
               [ mkValidator "is empty" null,
                 mkMaybeRecursiveValidator "?" id
@@ -58,5 +63,25 @@ instance Valid Station where
             mconcat
               [ mkValidator "is empty" null,
                 mkMaybeValidator "is empty" null
+              ]
+      ]
+
+instance Valid Connection where
+  validator =
+    mconcat
+      [ mkLabel (const "frequency") $
+          mkNested frequency $
+            mconcat
+              [ mkValidator "is empty" null
+              ],
+        mkLabel (const "mode") $
+          mkNested mode $
+            mconcat
+              [ mkValidator "is empty" null
+              ],
+        mkLabel (const "band") $
+          mkNested band $
+            mconcat
+              [ mkValidator "is empty" null
               ]
       ]

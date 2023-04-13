@@ -1,6 +1,7 @@
-module Data.Valid (Valid, Validator, valid, validate, validator, mkValidator, mkRecursiveValidator, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkDescriptor, mkNested, mkLabel) where
+module Data.Valid (Valid, Validator, valid, validate, validator, mkValidator, mkValidatorComment, mkRecursiveValidator, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkDescriptor, mkNested, mkLabel) where
 
 import Data.Coerce (coerce)
+import Data.Maybe (maybeToList)
 
 newtype Validator a = Validator (a -> [String])
 
@@ -22,8 +23,11 @@ valid = null . validate validator
 mkValidator :: String -> (a -> Bool) -> Validator a
 mkValidator name rule = Validator $ \a -> [name | rule a]
 
+mkValidatorComment :: (a -> Maybe String) -> Validator a
+mkValidatorComment rule = Validator $ \a -> maybeToList $ rule a
+
 mkLabel :: (a -> String) -> Validator a -> Validator a
-mkLabel p v = Validator $ \a -> [p a <> n | n <- validate v a]
+mkLabel p v = Validator $ \a -> [p a <> ":" <> n | n <- validate v a]
 
 mkNested :: (a -> b) -> Validator b -> Validator a
 mkNested n (Validator b) = Validator $ \a -> b (n a)
