@@ -116,16 +116,16 @@ buildUI wenv model = widgetTree
               enablable (record . stations) $
                 vstack
                   [ hstack
-                      [ label station_label,
-                        enablable station_lens $
+                      [ label "contacted",
+                        enablable contacted $
                           vstack
                             [ hstack
                                 [ label "callsign",
-                                  enablable callsign $ textField packed
+                                  enablable (coerced . callsign) $ textField packed
                                 ],
                               hstack
                                 [ label "operator",
-                                  enablable operator $
+                                  enablable (coerced . operator) $
                                     hstack
                                       [ label "name",
                                         enablable name $ textField packed
@@ -133,7 +133,7 @@ buildUI wenv model = widgetTree
                                 ],
                               hstack
                                 [ label "location",
-                                  enablable location $
+                                  enablable (coerced . location) $
                                     vstack
                                       [ hstack
                                           [ label "gridsquare",
@@ -161,18 +161,6 @@ buildUI wenv model = widgetTree
                                 ]
                             ]
                       ]
-                    | (station_label, station_lens) <-
-                        [ ( "logging",
-                            lens -- FIXME
-                              undefined
-                              undefined
-                          ),
-                          ( "contacted",
-                            lens -- FIXME
-                              undefined
-                              undefined
-                          )
-                        ]
                   ]
             ],
           hstack
