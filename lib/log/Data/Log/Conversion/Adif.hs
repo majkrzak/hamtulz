@@ -35,6 +35,9 @@ converters =
     -- Callsigns
     (Log'.stations ° Log'.logging ° Log'.callsign, Adif._station_callsign),
     (Log'.stations ° Log'.contacted ° Log'.callsign, Adif._call),
+    -- DXCC
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.dxcc . mrs, Adif._my_dxcc),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.dxcc . mrs, Adif._dxcc),
     -- Gridsquares
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.gridsquare, Adif._my_gridsquare),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.gridsquare, Adif._gridsquare),
@@ -50,6 +53,8 @@ converters =
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.sota, Adif._sota_ref),
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.pota, Adif._my_pota_ref),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.pota, Adif._pota_ref),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.iota, Adif._my_iota),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.iota, Adif._iota),
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.wwff, Adif._my_wwff_ref),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.wwff, Adif._wwff_ref)
   ]

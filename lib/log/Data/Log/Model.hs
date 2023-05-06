@@ -71,15 +71,18 @@ data Report = Report
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Location = Location
-  { gridsquare :: Maybe String,
+  { dxcc :: Maybe Int,
+    gridsquare :: Maybe String,
     description :: Maybe String,
     program :: Maybe Program
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Program = Program
-  { sota :: Maybe String,
+  { pga :: Maybe String,
+    sota :: Maybe String,
     pota :: Maybe String,
+    iota :: Maybe String,
     wwff :: Maybe String,
     wca :: Maybe String
   }
