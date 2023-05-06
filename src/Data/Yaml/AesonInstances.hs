@@ -1,8 +1,12 @@
 module Data.Yaml.AesonInstances () where
 
-import Data.Log (Band, Connection, Contacted, Location, Logging, Mode, Operator, Program, Record, Report, Station, Stations)
+import Data.Log (Band, Connection, Contacted, Document, Location, Logging, Metadata, Mode, Operator, Program, Record, Report, Station, Stations)
 import Data.Text (unpack)
 import Data.Yaml (FromJSON (parseJSON), withText)
+
+deriving instance FromJSON Document
+
+deriving instance FromJSON Metadata
 
 deriving instance FromJSON Record
 

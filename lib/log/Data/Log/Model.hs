@@ -9,6 +9,8 @@ module Data.Log.Model
     Logging (..),
     Contacted (..),
     Stations (..),
+    Document (..),
+    Metadata (..),
   )
 where
 
@@ -16,6 +18,19 @@ import Data.Empty (Empty)
 import Data.Log.Enum (Band, Mode)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
+
+data Document = Document
+  { metadata :: Maybe Metadata,
+    contacts :: Maybe [Record]
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
+
+data Metadata = Metadata
+  { callsigns :: Maybe [String],
+    locations :: Maybe [Location],
+    loggings :: Maybe [Logging]
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
 
 data Record = Record
   { datetime :: UTCTime,

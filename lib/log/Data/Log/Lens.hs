@@ -1,8 +1,12 @@
 module Data.Log.Lens where
 
 import Control.Lens (DefName (TopName), lensField, lensRules, makeLensesWith, (&), (.~))
-import Data.Log.Model (Connection, Location, Operator, Program, Record, Report, Station, Stations)
+import Data.Log.Model (Connection, Document, Location, Metadata, Operator, Program, Record, Report, Station, Stations)
 import Language.Haskell.TH (mkName, nameBase)
+
+makeLensesWith (lensRules & lensField .~ (\_ _ name -> [TopName (mkName $ nameBase name)])) ''Document
+
+makeLensesWith (lensRules & lensField .~ (\_ _ name -> [TopName (mkName $ nameBase name)])) ''Metadata
 
 makeLensesWith (lensRules & lensField .~ (\_ _ name -> [TopName (mkName $ nameBase name)])) ''Record
 makeLensesWith (lensRules & lensField .~ (\_ _ name -> [TopName (mkName $ nameBase name)])) ''Stations

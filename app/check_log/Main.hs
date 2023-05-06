@@ -10,11 +10,11 @@ import System.Environment (getArgs)
 main :: IO ()
 main = do
   [logFile] <- getArgs
-  (warning, records :: [Log.Record]) <-
+  (warning, document :: Log.Document) <-
     decodeFileWithWarnings logFile
       >>= \case
         Left err -> fail $ show err
         Right xs -> return xs
   print warning
-  putStrLn $ unlines $ validate validator records
+  putStrLn $ unlines $ validate validator document
   mempty

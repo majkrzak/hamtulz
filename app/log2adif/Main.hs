@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Lens ((.~), (?~), (^.), (^?), (^?!), _Just, coerced)
+import Control.Lens (coerced, (.~), (?~), (^.), (^?), (^?!), _Just)
 import Control.Lens.Helper ((·))
 import Data.Adif qualified as Adif
 import Data.Empty (empty)
@@ -16,7 +16,8 @@ import System.Environment (getArgs)
 main :: IO ()
 main = do
   [logFile, adifFile] <- getArgs
-  records :: [Log.Record] <- decodeFileThrow logFile
+  document :: Log.Document <- decodeFileThrow logFile
+  let records = document ^?! contacts . _Just
 
   mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (callsignRecords records)
   mapM_ (\records' -> writeFile (adifFile ++ sotaFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (sotaRecords records)

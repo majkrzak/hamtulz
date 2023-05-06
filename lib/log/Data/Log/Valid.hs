@@ -6,6 +6,15 @@ import Data.Log.Model
 import Data.Time.Format.ISO8601 (iso8601Show)
 import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkRecursiveValidator, mkValidator, mkValidatorComment, validator)
 
+instance Valid Document where
+  validator =
+    mconcat
+      [ mkNested contacts $
+          mconcat
+            [ mkMaybeRecursiveValidator "?" id
+            ]
+      ]
+
 instance Valid [Record] where
   validator =
     mconcat
