@@ -6,6 +6,7 @@ import Data.Adif qualified as Adif
 import Data.Empty (Empty, empty)
 import Data.Log.Lens qualified as Log'
 import Data.Log.Model qualified as Log
+import Data.Log.NewType qualified as Log²
 import Data.Maybe (fromJust)
 import Data.Time (UTCTime, defaultTimeLocale, formatTime, parseTimeOrError, utctDay, utctDayTime)
 
