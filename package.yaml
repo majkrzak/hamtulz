@@ -126,6 +126,14 @@ internal-libraries:
     dependencies:
     - hamtulz-empty
     - hamtulz-adi
+  hamtulz-radio:
+    source-dirs: lib/radio
+    exposed-modules:
+    - Data.Radio
+    dependencies:
+    - hamtulz-empty
+    - hamtulz-valid
+    - hamtulz-lens-helper
   hamtulz-log:
     source-dirs: lib/log
     exposed-modules:
