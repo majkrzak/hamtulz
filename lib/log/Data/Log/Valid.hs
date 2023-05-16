@@ -3,7 +3,6 @@ module Data.Log.Valid () where
 import Data.Coerce (coerce)
 import Data.Function (fix)
 import Data.Log.Model
-import Data.Log.NewType
 import Data.Time.Format.ISO8601 (iso8601Show)
 import Data.Valid (Valid, mkLabel, mkListRecursiveValidator, mkMaybeRecursiveValidator, mkMaybeValidator, mkNested, mkRecursiveValidator, mkValidator, mkValidatorComment, validator)
 

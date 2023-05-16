@@ -16,7 +16,6 @@ where
 
 import Data.Empty (Empty)
 import Data.Log.Enum (Band, Mode)
-import {-# SOURCE #-} Data.Log.NewType (Contacted, Logging)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 
@@ -46,6 +45,10 @@ data Stations = Stations
     contacted :: Maybe Contacted
   }
   deriving (Eq, Show, Read, Generic, Empty)
+
+newtype Logging = Logging Station deriving (Eq, Show, Read, Generic, Empty)
+
+newtype Contacted = Contacted Station deriving (Eq, Show, Read, Generic, Empty)
 
 data Station = Station
   { callsign :: Maybe String,
