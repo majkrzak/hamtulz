@@ -170,6 +170,10 @@ buildUI wenv model = widgetTree
                   [ hstack
                       [ label "frequency",
                         enablable frequency $ numericField_ id [decimals 5]
+                      ],
+                    hstack
+                      [ label "frequency_rx",
+                        enablable frequency_rx $ numericField_ id [decimals 5]
                       ]
                   ]
             ],

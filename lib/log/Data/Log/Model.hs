@@ -59,8 +59,10 @@ data Station = Station
 
 data Connection = Connection
   { band :: Maybe Band,
+    band_rx :: Maybe Band,
     mode :: Maybe Mode,
-    frequency :: Maybe Double
+    frequency :: Maybe Double,
+    frequency_rx :: Maybe Double
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
