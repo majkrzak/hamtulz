@@ -5,9 +5,12 @@ module Data.Radio.Band
 where
 
 import Data.Empty (Empty)
+import Data.Text (pack, unpack)
+import Data.Yaml.Builder qualified as YB (ToYaml, string, toYaml)
+import Data.Yaml.Parser qualified as YP (FromYaml, fromYaml, withText)
 import GHC.Generics (Generic)
 import Text.ParserCombinators.ReadP (choice, string)
-import Text.Read (lift, readPrec)
+import Text.Read (lift, readEither, readPrec)
 
 -- | Radio Bands enumeration
 -- Based on and compliant with https://adif.org/314/ADIF_314.htm#Band_Enumeration
@@ -120,6 +123,15 @@ instance Read Band where
           string "1mm" >> return OneMilimeter,
           string "submm" >> return SubMilimieter
         ]
+
+instance YP.FromYaml Band where
+  fromYaml = YP.withText "Band" $ \x -> do
+    case readEither (unpack x) of
+      Right b -> return b
+      Left e -> fail e
+
+instance YB.ToYaml Band where
+  toYaml = YB.string . pack . show
 
 -- | Convert frequency in MHz to Band, if possible
 fromFrequency :: Double -> Maybe Band
