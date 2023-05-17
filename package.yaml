@@ -112,6 +112,10 @@ internal-libraries:
     - Control.Lens.Helper
     dependencies:
     - hamtulz-empty
+  hamtulz-yaml-helper:
+    source-dirs: lib/yaml-helper
+    exposed-modules:
+    - Data.Yaml.Helper
   hamtulz-adi:
     source-dirs: lib/adi
     exposed-modules:
@@ -134,6 +138,7 @@ internal-libraries:
     - hamtulz-empty
     - hamtulz-valid
     - hamtulz-lens-helper
+    - hamtulz-yaml-helper
   hamtulz-log:
     source-dirs: lib/log
     exposed-modules:
