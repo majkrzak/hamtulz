@@ -15,6 +15,7 @@ dependencies:
 - xdg-basedir
 - lens
 - data-default
+- containers
 
 default-extensions:
 - DeriveGeneric
@@ -148,6 +149,7 @@ internal-libraries:
     - hamtulz-empty
     - hamtulz-valid
     - hamtulz-lens-helper
+    - hamtulz-yaml-helper
     - hamtulz-adif
     - hamtulz-radio
 
