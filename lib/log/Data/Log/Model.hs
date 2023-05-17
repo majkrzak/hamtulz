@@ -15,7 +15,7 @@ module Data.Log.Model
 where
 
 import Data.Empty (Empty)
-import Data.Log.Enum (Band, Mode)
+import Data.Radio (Band, Mode)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 

@@ -42,6 +42,7 @@ library:
   - hamtulz-adi
   - hamtulz-adif
   - hamtulz-log
+  - hamtulz-radio
 
 executables:
   wsjtx2log:
@@ -148,6 +149,7 @@ internal-libraries:
     - hamtulz-valid
     - hamtulz-lens-helper
     - hamtulz-adif
+    - hamtulz-radio
 
 tests:
   test-adi:
