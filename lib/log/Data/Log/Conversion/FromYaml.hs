@@ -12,29 +12,29 @@ import Data.Yaml.Parser (FromYaml, fromYaml, withMapping)
 
 instance FromYaml Document where
   fromYaml = withMapping "Document" $ \k -> do
-    metadata :: Maybe Metadata <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "metadata")
-    contacts :: Maybe [Record] <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "contacts")
+    metadata :: Maybe Metadata <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "metadata")
+    contacts :: Maybe [Record] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "contacts")
     return $ Document {..}
 
 instance FromYaml Metadata where
   fromYaml = withMapping "Metadata" $ \k -> do
-    callsigns :: Maybe [String] <- maybe mempty (fmap Just . (fmap (map unpack) . fromYaml)) (fromList k ^. at "callsigns")
-    locations :: Maybe [Location] <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "locations")
-    loggings :: Maybe [Logging] <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "loggings")
+    callsigns :: Maybe [String] <- maybe (return Nothing) (fmap Just . (fmap (map unpack) . fromYaml)) (fromList k ^. at "callsigns")
+    locations :: Maybe [Location] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "locations")
+    loggings :: Maybe [Logging] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "loggings")
     return $ Metadata {..}
 
 instance FromYaml Record where
   fromYaml = withMapping "Record" $ \k -> do
     datetime :: UTCTime <- maybe (fail "datetime missing") (fromYaml) (fromList k ^. at "datetime")
-    stations :: Maybe Stations <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "stations")
-    connection :: Maybe Connection <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "connection")
-    report :: Maybe Report <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "report")
+    stations :: Maybe Stations <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "stations")
+    connection :: Maybe Connection <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "connection")
+    report :: Maybe Report <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "report")
     return $ Record {..}
 
 instance FromYaml Stations where
   fromYaml = withMapping "Stations" $ \k -> do
-    logging :: Maybe Logging <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "logging")
-    contacted :: Maybe Contacted <- maybe mempty (fmap Just . fromYaml) (fromList k ^. at "contacted")
+    logging :: Maybe Logging <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "logging")
+    contacted :: Maybe Contacted <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "contacted")
     return $ Stations {..}
 
 instance FromYaml Logging where

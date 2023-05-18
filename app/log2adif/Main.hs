@@ -9,14 +9,13 @@ import Data.Log as Log
 import Data.Maybe (fromMaybe, isJust)
 import Data.Time (utctDay)
 import Data.Time.Format.ISO8601 (iso8601Show)
-import Data.Yaml (decodeFileThrow)
-import Data.Yaml.AesonInstances ()
 import System.Environment (getArgs)
+import Data.Yaml.Parser (readYamlFile)
 
 main :: IO ()
 main = do
   [logFile, adifFile] <- getArgs
-  document :: Log.Document <- decodeFileThrow logFile
+  document :: Log.Document <- readYamlFile logFile
   let records = document ^?! contacts . _Just
 
   mapM_ (\records' -> writeFile (adifFile ++ callsignFileName (head records')) (show $ Adif.toAdi $ makeAdif records')) (callsignRecords records)
