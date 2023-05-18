@@ -16,6 +16,8 @@ dependencies:
 - lens
 - data-default
 - containers
+- conduit
+- libyaml
 
 default-extensions:
 - DeriveGeneric
@@ -160,6 +162,24 @@ tests:
     dependencies:
     - hamtulz-valid
     - hamtulz-adi
+    - tasty
+    - tasty-quickcheck
+    - tasty-smallcheck
+    - tasty-hunit
+    - smallcheck
+    - QuickCheck
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+  test-yaml:
+    main: Main.hs
+    source-dirs: test/yaml
+    dependencies:
+    - hamtulz-valid
+    - hamtulz-log
+    - hamtulz-empty
+    - hamtulz-yaml-helper
     - tasty
     - tasty-quickcheck
     - tasty-smallcheck
