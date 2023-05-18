@@ -39,8 +39,8 @@ converters =
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.dxcc . mrs, Adif._my_dxcc),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.dxcc . mrs, Adif._dxcc),
     -- Gridsquares
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.gridsquare . mpu, Adif._my_gridsquare),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.gridsquare . mpu, Adif._gridsquare),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.gridsquare . mrs, Adif._my_gridsquare),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.gridsquare . mrs, Adif._gridsquare),
     -- Report
     (Log'.report ° Log'.sent . mpu, Adif._rst_sent),
     (Log'.report ° Log'.rcvd . mpu, Adif._rst_rcvd),

@@ -2,39 +2,38 @@
 
 module Data.Log.Conversion.FromYaml () where
 
-import Control.Lens (at, (^.))
 import Data.Log.Model (Connection (..), Contacted (..), Document (..), Location (..), Logging (..), Metadata (..), Operator (..), Program (..), Record (..), Report (..), Station (..), Stations (..))
 import Data.Map (fromList)
-import Data.Radio (Band, Mode)
+import Data.Radio (Band, Locator, Mode)
 import Data.Text (Text, pack, unpack)
 import Data.Time (UTCTime)
 import Data.Yaml.Parser (FromYaml, fromYaml, withMapping)
 
 instance FromYaml Document where
   fromYaml = withMapping "Document" $ \k -> do
-    metadata :: Maybe Metadata <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "metadata")
-    contacts :: Maybe [Record] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "contacts")
+    metadata :: Maybe Metadata <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "metadata" k)
+    contacts :: Maybe [Record] <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "contacts" k)
     return $ Document {..}
 
 instance FromYaml Metadata where
   fromYaml = withMapping "Metadata" $ \k -> do
-    callsigns :: Maybe [Text] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "callsigns")
-    locations :: Maybe [Location] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "locations")
-    loggings :: Maybe [Logging] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "loggings")
+    callsigns :: Maybe [Text] <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "callsigns" k)
+    locations :: Maybe [Location] <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "locations" k)
+    loggings :: Maybe [Logging] <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "loggings" k)
     return $ Metadata {..}
 
 instance FromYaml Record where
   fromYaml = withMapping "Record" $ \k -> do
-    datetime :: UTCTime <- maybe (fail "datetime missing") (fromYaml) (fromList k ^. at "datetime")
-    stations :: Maybe Stations <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "stations")
-    connection :: Maybe Connection <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "connection")
-    report :: Maybe Report <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "report")
+    datetime :: UTCTime <- maybe (fail "datetime missing") (fromYaml) (lookup "datetime" k)
+    stations :: Maybe Stations <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "stations" k)
+    connection :: Maybe Connection <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "connection" k)
+    report :: Maybe Report <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "report" k)
     return $ Record {..}
 
 instance FromYaml Stations where
   fromYaml = withMapping "Stations" $ \k -> do
-    logging :: Maybe Logging <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "logging")
-    contacted :: Maybe Contacted <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "contacted")
+    logging :: Maybe Logging <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "logging" k)
+    contacted :: Maybe Contacted <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "contacted" k)
     return $ Stations {..}
 
 instance FromYaml Logging where
@@ -45,46 +44,46 @@ instance FromYaml Contacted where
 
 instance FromYaml Station where
   fromYaml = withMapping "Station" $ \k -> do
-    callsign :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "callsign")
-    operator :: Maybe Operator <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "operator")
-    location :: Maybe Location <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "location")
+    callsign :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "callsign" k)
+    operator :: Maybe Operator <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "operator" k)
+    location :: Maybe Location <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "location" k)
     return $ Station {..}
 
 instance FromYaml Connection where
   fromYaml = withMapping "Connection" $ \k -> do
-    band :: Maybe Band <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "band")
-    band_rx :: Maybe Band <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "band_rx")
-    mode :: Maybe Mode <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "mode")
-    frequency :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (fromList k ^. at "frequency")
-    frequency_rx :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (fromList k ^. at "frequency_rx")
+    band :: Maybe Band <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "band" k)
+    band_rx :: Maybe Band <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "band_rx" k)
+    mode :: Maybe Mode <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "mode" k)
+    frequency :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (lookup "frequency" k)
+    frequency_rx :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (lookup "frequency_rx" k)
     return $ Connection {..}
 
 instance FromYaml Location where
   fromYaml = withMapping "Program" $ \k -> do
-    dxcc :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "dxcc")
-    gridsquare :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "gridsquare")
-    description :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "description")
-    program :: Maybe Program <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "program")
+    dxcc :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "dxcc" k)
+    gridsquare :: Maybe Locator <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "gridsquare" k)
+    description :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "description" k)
+    program :: Maybe Program <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "program" k)
     return $ Location {..}
 
 instance FromYaml Program where
   fromYaml = withMapping "Program" $ \k -> do
-    pga :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "pga")
-    sota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "sota")
-    pota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "pota")
-    iota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "iota")
-    wwff :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "wwff")
-    wca :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "wca")
+    pga :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "pga" k)
+    sota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "sota" k)
+    pota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "pota" k)
+    iota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "iota" k)
+    wwff :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "wwff" k)
+    wca :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "wca" k)
     return $ Program {..}
 
 instance FromYaml Operator where
   fromYaml = withMapping "Operator" $ \k -> do
-    name :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "name")
-    age :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "age")
+    name :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "name" k)
+    age :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "age" k)
     return $ Operator {..}
 
 instance FromYaml Report where
   fromYaml = withMapping "Report" $ \k -> do
-    sent :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "sent")
-    rcvd :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "rcvd")
+    sent :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "sent" k)
+    rcvd :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "rcvd" k)
     return $ Report {..}

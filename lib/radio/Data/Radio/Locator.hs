@@ -1,6 +1,9 @@
 module Data.Radio.Locator (Locator) where
 
 import Data.Empty (Empty)
+import Data.Yaml.Builder (ToYaml, toYaml)
+import Data.Yaml.Helper (showFromYaml, showToYaml)
+import Data.Yaml.Parser (FromYaml, fromYaml)
 import GHC.Generics (Generic)
 import Text.ParserCombinators.ReadP (choice, string)
 import Text.Read (lift, pfail, readEither, readPrec, (<++))
@@ -290,3 +293,9 @@ instance Read Extsquare_ where
           string "8" >> return Extsquare_8,
           string "9" >> return Extsquare_9
         ]
+
+instance FromYaml Locator where
+  fromYaml = showFromYaml
+
+instance ToYaml Locator where
+  toYaml = showToYaml

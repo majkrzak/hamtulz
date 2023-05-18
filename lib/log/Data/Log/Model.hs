@@ -15,7 +15,7 @@ module Data.Log.Model
 where
 
 import Data.Empty (Empty)
-import Data.Radio (Band, Mode)
+import Data.Radio (Band, Mode, Locator)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
@@ -75,7 +75,7 @@ data Report = Report
 
 data Location = Location
   { dxcc :: Maybe Int,
-    gridsquare :: Maybe Text,
+    gridsquare :: Maybe Locator,
     description :: Maybe Text,
     program :: Maybe Program
   }
