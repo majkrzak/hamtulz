@@ -1,7 +1,7 @@
 module Data.Log.Conversion.Adif (toAdif, fromAdif) where
 
 import Control.Lens (Lens', lens, set, view, (^.))
-import Control.Lens.Helper (maybe', mrs, (°), (·))
+import Control.Lens.Helper (maybe', mrs, mpu, (°), (·))
 import Data.Adif qualified as Adif
 import Data.Empty (Empty, empty)
 import Data.Log.Lens qualified as Log'
@@ -33,17 +33,17 @@ converters =
     (Log'.datetime . days . maybe', Adif._qso_date),
     (Log'.datetime . hours . maybe', Adif._time_on),
     -- Callsigns
-    (Log'.stations ° Log'.logging ° Log'.callsign, Adif._station_callsign),
-    (Log'.stations ° Log'.contacted ° Log'.callsign, Adif._call),
+    (Log'.stations ° Log'.logging ° Log'.callsign . mpu, Adif._station_callsign),
+    (Log'.stations ° Log'.contacted ° Log'.callsign . mpu, Adif._call),
     -- DXCC
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.dxcc . mrs, Adif._my_dxcc),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.dxcc . mrs, Adif._dxcc),
     -- Gridsquares
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.gridsquare, Adif._my_gridsquare),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.gridsquare, Adif._gridsquare),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.gridsquare . mpu, Adif._my_gridsquare),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.gridsquare . mpu, Adif._gridsquare),
     -- Report
-    (Log'.report ° Log'.sent, Adif._rst_sent),
-    (Log'.report ° Log'.rcvd, Adif._rst_rcvd),
+    (Log'.report ° Log'.sent . mpu, Adif._rst_sent),
+    (Log'.report ° Log'.rcvd . mpu, Adif._rst_rcvd),
     -- Connection
     (Log'.connection ° Log'.band . mrs, Adif._band),
     (Log'.connection ° Log'.band_rx . mrs, Adif._band_rx),
@@ -51,12 +51,12 @@ converters =
     (Log'.connection ° Log'.frequency . mrs, Adif._freq),
     (Log'.connection ° Log'.frequency_rx . mrs, Adif._freq_rx),
     -- Programs
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.sota, Adif._my_sota_ref),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.sota, Adif._sota_ref),
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.pota, Adif._my_pota_ref),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.pota, Adif._pota_ref),
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.iota, Adif._my_iota),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.iota, Adif._iota),
-    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.wwff, Adif._my_wwff_ref),
-    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.wwff, Adif._wwff_ref)
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._my_sota_ref),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._sota_ref),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.pota . mpu, Adif._my_pota_ref),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.pota . mpu, Adif._pota_ref),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.iota . mpu, Adif._my_iota),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.iota . mpu, Adif._iota),
+    (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.wwff . mpu, Adif._my_wwff_ref),
+    (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.wwff . mpu, Adif._wwff_ref)
   ]

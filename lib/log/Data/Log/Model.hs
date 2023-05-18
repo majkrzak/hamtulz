@@ -16,6 +16,7 @@ where
 
 import Data.Empty (Empty)
 import Data.Radio (Band, Mode)
+import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 
@@ -26,7 +27,7 @@ data Document = Document
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Metadata = Metadata
-  { callsigns :: Maybe [String],
+  { callsigns :: Maybe [Text],
     locations :: Maybe [Location],
     loggings :: Maybe [Logging]
   }
@@ -51,7 +52,7 @@ newtype Logging = Logging Station deriving (Eq, Show, Read, Generic, Empty)
 newtype Contacted = Contacted Station deriving (Eq, Show, Read, Generic, Empty)
 
 data Station = Station
-  { callsign :: Maybe String,
+  { callsign :: Maybe Text,
     operator :: Maybe Operator,
     location :: Maybe Location
   }
@@ -67,31 +68,31 @@ data Connection = Connection
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Report = Report
-  { sent :: Maybe String,
-    rcvd :: Maybe String
+  { sent :: Maybe Text,
+    rcvd :: Maybe Text
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Location = Location
   { dxcc :: Maybe Int,
-    gridsquare :: Maybe String,
-    description :: Maybe String,
+    gridsquare :: Maybe Text,
+    description :: Maybe Text,
     program :: Maybe Program
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Program = Program
-  { pga :: Maybe String,
-    sota :: Maybe String,
-    pota :: Maybe String,
-    iota :: Maybe String,
-    wwff :: Maybe String,
-    wca :: Maybe String
+  { pga :: Maybe Text,
+    sota :: Maybe Text,
+    pota :: Maybe Text,
+    iota :: Maybe Text,
+    wwff :: Maybe Text,
+    wca :: Maybe Text
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Operator = Operator
-  { name :: Maybe String,
+  { name :: Maybe Text,
     age :: Maybe Int
   }
   deriving (Eq, Show, Read, Generic, Empty)

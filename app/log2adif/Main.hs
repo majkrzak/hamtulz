@@ -1,7 +1,7 @@
 module Main where
 
 import Control.Lens (coerced, (.~), (?~), (^.), (^?), (^?!), _Just)
-import Control.Lens.Helper ((·))
+import Control.Lens.Helper ((·), mpu)
 import Data.Adif qualified as Adif
 import Data.Empty (empty)
 import Data.List (groupBy)
@@ -36,7 +36,7 @@ makeAdif records =
 
 callsignFileName :: Log.Record -> String
 callsignFileName record =
-  safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)) ++ ".adif"
+  safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . mpu . _Just)) ++ ".adif"
 
 callsignRecords :: [Log.Record] -> [[Log.Record]]
 callsignRecords = groupBy (\r1 r2 -> callsignFileName r1 == callsignFileName r2)
@@ -48,9 +48,9 @@ sotaFileName record =
       "/",
       iso8601Show (utctDay (record ^. Log.datetime)),
       "_",
-      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)),
+      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . mpu . _Just)),
       "_",
-      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.sota . _Just))),
+      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.sota . mpu . _Just))),
       ".adif"
     ]
 
@@ -69,9 +69,9 @@ potaFileName record =
       "/",
       iso8601Show (utctDay (record ^. Log.datetime)),
       "_",
-      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . _Just)),
+      safeStroke (record ^?! (Log.stations . _Just . Log.logging . _Just . coerced . Log.callsign . mpu ._Just)),
       "_",
-      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.pota . _Just))),
+      safeStroke (fromMaybe "" (record ^? (Log.stations . _Just . Log.logging . _Just . coerced . Log.location . _Just . Log.program . _Just . Log.pota . mpu . _Just))),
       ".adif"
     ]
 

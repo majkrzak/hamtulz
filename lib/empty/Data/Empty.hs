@@ -1,5 +1,6 @@
 module Data.Empty (Empty, empty) where
 
+import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics
 
@@ -43,3 +44,6 @@ instance Empty Bool where
 
 instance Empty UTCTime where
   empty = read "1970-01-01 00:00:00.000000 UTC"
+
+instance Empty Text where
+  empty = ""

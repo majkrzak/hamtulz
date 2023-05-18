@@ -6,7 +6,7 @@ import Control.Lens (at, (^.))
 import Data.Log.Model (Connection (..), Contacted (..), Document (..), Location (..), Logging (..), Metadata (..), Operator (..), Program (..), Record (..), Report (..), Station (..), Stations (..))
 import Data.Map (fromList)
 import Data.Radio (Band, Mode)
-import Data.Text (pack, unpack)
+import Data.Text (Text, pack, unpack)
 import Data.Time (UTCTime)
 import Data.Yaml.Parser (FromYaml, fromYaml, withMapping)
 
@@ -18,7 +18,7 @@ instance FromYaml Document where
 
 instance FromYaml Metadata where
   fromYaml = withMapping "Metadata" $ \k -> do
-    callsigns :: Maybe [String] <- maybe (return Nothing) (fmap Just . (fmap (map unpack) . fromYaml)) (fromList k ^. at "callsigns")
+    callsigns :: Maybe [Text] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "callsigns")
     locations :: Maybe [Location] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "locations")
     loggings :: Maybe [Logging] <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "loggings")
     return $ Metadata {..}
@@ -45,7 +45,7 @@ instance FromYaml Contacted where
 
 instance FromYaml Station where
   fromYaml = withMapping "Station" $ \k -> do
-    callsign :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "callsign")
+    callsign :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "callsign")
     operator :: Maybe Operator <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "operator")
     location :: Maybe Location <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "location")
     return $ Station {..}
@@ -62,29 +62,29 @@ instance FromYaml Connection where
 instance FromYaml Location where
   fromYaml = withMapping "Program" $ \k -> do
     dxcc :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "dxcc")
-    gridsquare :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "gridsquare")
-    description :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "description")
+    gridsquare :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "gridsquare")
+    description :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "description")
     program :: Maybe Program <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "program")
     return $ Location {..}
 
 instance FromYaml Program where
   fromYaml = withMapping "Program" $ \k -> do
-    pga :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "pga")
-    sota :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "sota")
-    pota :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "pota")
-    iota :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "iota")
-    wwff :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "wwff")
-    wca :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "wca")
+    pga :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "pga")
+    sota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "sota")
+    pota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "pota")
+    iota :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "iota")
+    wwff :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "wwff")
+    wca :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "wca")
     return $ Program {..}
 
 instance FromYaml Operator where
   fromYaml = withMapping "Operator" $ \k -> do
-    name :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "name")
+    name :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "name")
     age :: Maybe Int <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "age")
     return $ Operator {..}
 
 instance FromYaml Report where
   fromYaml = withMapping "Report" $ \k -> do
-    sent :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "sent")
-    rcvd :: Maybe String <- maybe (return Nothing) (fmap (Just . unpack) . fromYaml) (fromList k ^. at "rcvd")
+    sent :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "sent")
+    rcvd :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (fromList k ^. at "rcvd")
     return $ Report {..}

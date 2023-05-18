@@ -121,14 +121,14 @@ buildUI wenv model = widgetTree
                           vstack
                             [ hstack
                                 [ label "callsign",
-                                  enablable (coerced . callsign) $ textField packed
+                                  enablable (coerced . callsign) $ textField id
                                 ],
                               hstack
                                 [ label "operator",
                                   enablable (coerced . operator) $
                                     hstack
                                       [ label "name",
-                                        enablable name $ textField packed
+                                        enablable name $ textField id
                                       ]
                                 ],
                               hstack
@@ -137,11 +137,11 @@ buildUI wenv model = widgetTree
                                     vstack
                                       [ hstack
                                           [ label "gridsquare",
-                                            enablable gridsquare $ textField packed
+                                            enablable gridsquare $ textField id
                                           ],
                                         hstack
                                           [ label "description",
-                                            enablable description $ textField packed
+                                            enablable description $ textField id
                                           ],
                                         hstack
                                           [ label "program",
@@ -149,11 +149,11 @@ buildUI wenv model = widgetTree
                                               vstack
                                                 [ hstack
                                                     [ label "sota",
-                                                      enablable sota $ textField packed
+                                                      enablable sota $ textField id
                                                     ],
                                                   hstack
                                                     [ label "wwff",
-                                                      enablable wwff $ textField packed
+                                                      enablable wwff $ textField id
                                                     ]
                                                 ]
                                           ]
@@ -183,11 +183,11 @@ buildUI wenv model = widgetTree
                 vstack
                   [ hstack
                       [ label "sent",
-                        enablable sent $ textField packed
+                        enablable sent $ textField id
                       ],
                     hstack
                       [ label "rcvd",
-                        enablable rcvd $ textField packed
+                        enablable rcvd $ textField id
                       ]
                   ]
             ],

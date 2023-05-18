@@ -1,8 +1,9 @@
-module Control.Lens.Helper ((·), (°), mrs, maybe') where
+module Control.Lens.Helper ((·), (°), mrs, mpu, maybe') where
 
 import Control.Lens (ALens', Lens', coerced, lens, non)
 import Data.Coerce (Coercible)
 import Data.Empty (Empty, empty)
+import Data.Text (Text, pack, unpack)
 
 -- | Compose list of setters against value
 (·) :: [a -> a] -> a -> a
@@ -33,6 +34,19 @@ mrs =
     ( \_ -> \case
         Nothing -> Nothing
         Just a -> Just $ read a
+    )
+
+-- | Lens wrapper for pack unpack operation
+mpu :: Lens' (Maybe Text) (Maybe String)
+mpu =
+  lens
+    ( \case
+        Nothing -> Nothing
+        Just a -> Just $ unpack a
+    )
+    ( \_ -> \case
+        Nothing -> Nothing
+        Just a -> Just $ pack a
     )
 
 -- | Wraps maybe lens
