@@ -4,7 +4,7 @@ module Data.Log.Conversion.FromYaml () where
 
 import Data.Log.Model (Connection (..), Contacted (..), Document (..), Location (..), Logging (..), Metadata (..), Operator (..), Program (..), Record (..), Report (..), Station (..), Stations (..), Via (..))
 import Data.Map (fromList)
-import Data.Radio (Band, Locator, Mode)
+import Data.Radio (Band, Locator, Mode, Satellite)
 import Data.Text (Text, pack, unpack)
 import Data.Time (UTCTime)
 import Data.Yaml.Parser (FromYaml, fromYaml, withMapping)
@@ -61,7 +61,7 @@ instance FromYaml Connection where
 
 instance FromYaml Via where
   fromYaml = withMapping "Via" $ \k -> do
-    satellite :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "satellite" k)
+    satellite :: Maybe Satellite <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "satellite" k)
     repeater :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "repeater" k)
     talkgroup :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "talkgroup" k)
     return $ Via {..}

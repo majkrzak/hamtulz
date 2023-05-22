@@ -16,7 +16,7 @@ module Data.Log.Model
 where
 
 import Data.Empty (Empty)
-import Data.Radio (Band, Locator, Mode)
+import Data.Radio (Band, Locator, Mode, Satellite)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
@@ -70,7 +70,7 @@ data Connection = Connection
   deriving (Eq, Show, Read, Generic, Empty)
 
 data Via = Via
-  { satellite :: Maybe Text,
+  { satellite :: Maybe Satellite,
     repeater :: Maybe Text,
     talkgroup :: Maybe Text
   }

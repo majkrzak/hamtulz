@@ -63,7 +63,7 @@ converters =
     (Log'.connection ° Log'.mode . mrs, Adif._mode),
     (Log'.connection ° Log'.frequency . mrs, Adif._freq),
     (Log'.connection ° Log'.frequency_rx . mrs, Adif._freq_rx),
-    (Log'.connection ° Log'.via ° Log'.satellite . mpu, sat),
+    (Log'.connection ° Log'.via ° Log'.satellite . mrs, sat),
     -- Programs
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._my_sota_ref),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._sota_ref),
