@@ -2,7 +2,7 @@
 
 module Data.Log.Conversion.FromYaml () where
 
-import Data.Log.Model (Connection (..), Contacted (..), Document (..), Location (..), Logging (..), Metadata (..), Operator (..), Program (..), Record (..), Report (..), Station (..), Stations (..))
+import Data.Log.Model (Connection (..), Contacted (..), Document (..), Location (..), Logging (..), Metadata (..), Operator (..), Program (..), Record (..), Report (..), Station (..), Stations (..), Via (..))
 import Data.Map (fromList)
 import Data.Radio (Band, Locator, Mode)
 import Data.Text (Text, pack, unpack)
@@ -56,7 +56,15 @@ instance FromYaml Connection where
     mode :: Maybe Mode <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "mode" k)
     frequency :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (lookup "frequency" k)
     frequency_rx :: Maybe Double <- maybe (return Nothing) (fmap (Just . read . unpack) . fromYaml) (lookup "frequency_rx" k)
+    via :: Maybe Via <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "via" k)
     return $ Connection {..}
+
+instance FromYaml Via where
+  fromYaml = withMapping "Via" $ \k -> do
+    satellite :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "satellite" k)
+    repeater :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "repeater" k)
+    talkgroup :: Maybe Text <- maybe (return Nothing) (fmap Just . fromYaml) (lookup "talkgroup" k)
+    return $ Via {..}
 
 instance FromYaml Location where
   fromYaml = withMapping "Program" $ \k -> do

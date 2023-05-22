@@ -1,7 +1,7 @@
 module Data.Log.Conversion.Adif (toAdif, fromAdif) where
 
-import Control.Lens (Lens', lens, set, view, (^.))
-import Control.Lens.Helper (maybe', mrs, mpu, (°), (·))
+import Control.Lens (Lens', lens, set, view, (?~), (^.))
+import Control.Lens.Helper (maybe', mpu, mrs, (°), (·))
 import Data.Adif qualified as Adif
 import Data.Empty (Empty, empty)
 import Data.Log.Lens qualified as Log'
@@ -27,6 +27,19 @@ hours =
     (formatTime defaultTimeLocale "%H%M%S")
     (\time time' -> time {utctDayTime = utctDayTime (parseTimeOrError True defaultTimeLocale "%H%M%S" time')})
 
+sat :: Lens' Adif.Record (Maybe String)
+sat =
+  lens
+    (^. Adif._sat_name)
+    ( \rec -> \case
+        Just val ->
+          [ Adif._prop_mode ?~ "SAT",
+            Adif._sat_name ?~ val
+          ]
+            · rec
+        Nothing -> rec
+    )
+
 converters :: [(Lens' Log.Record (Maybe String), Lens' Adif.Record (Maybe String))]
 converters =
   [ -- Date Time
@@ -50,6 +63,7 @@ converters =
     (Log'.connection ° Log'.mode . mrs, Adif._mode),
     (Log'.connection ° Log'.frequency . mrs, Adif._freq),
     (Log'.connection ° Log'.frequency_rx . mrs, Adif._freq_rx),
+    (Log'.connection ° Log'.via ° Log'.satellite . mpu, sat),
     -- Programs
     (Log'.stations ° Log'.logging ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._my_sota_ref),
     (Log'.stations ° Log'.contacted ° Log'.location ° Log'.program ° Log'.sota . mpu, Adif._sota_ref),

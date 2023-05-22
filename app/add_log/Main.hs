@@ -135,7 +135,7 @@ buildUI wenv model = widgetTree
                                 [ label "location",
                                   enablable (coerced . location) $
                                     vstack
-                                      [                                       hstack
+                                      [ hstack
                                           [ label "description",
                                             enablable description $ textField id
                                           ],

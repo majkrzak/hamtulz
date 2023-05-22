@@ -1,5 +1,6 @@
 module Data.Log.Model
   ( Connection (..),
+    Via (..),
     Location (..),
     Operator (..),
     Program (..),
@@ -15,7 +16,7 @@ module Data.Log.Model
 where
 
 import Data.Empty (Empty)
-import Data.Radio (Band, Mode, Locator)
+import Data.Radio (Band, Locator, Mode)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
@@ -63,7 +64,15 @@ data Connection = Connection
     band_rx :: Maybe Band,
     mode :: Maybe Mode,
     frequency :: Maybe Double,
-    frequency_rx :: Maybe Double
+    frequency_rx :: Maybe Double,
+    via :: Maybe Via
+  }
+  deriving (Eq, Show, Read, Generic, Empty)
+
+data Via = Via
+  { satellite :: Maybe Text,
+    repeater :: Maybe Text,
+    talkgroup :: Maybe Text
   }
   deriving (Eq, Show, Read, Generic, Empty)
 
