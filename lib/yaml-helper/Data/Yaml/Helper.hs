@@ -13,8 +13,10 @@ import Text.Libyaml (decode)
 import Text.Read (readMaybe)
 
 showFromYaml :: forall a. (Read a, Typeable a) => YamlValue -> YamlParser a
-showFromYaml = withText mempty $ \x ->
-  maybe (fail $ "Can not parse " ++ show x ++ " as " ++ show (typeRep (Proxy :: Proxy a))) return $ readMaybe $ unpack x
+showFromYaml = withText (pack typename) $ \x ->
+  maybe (fail $ "Can not parse " ++ show x ++ " as " ++ typename) return $ readMaybe $ unpack x
+  where
+    typename :: String = show $ typeRep (Proxy :: Proxy a)
 
 showToYaml :: Show a => a -> YamlBuilder
 showToYaml = string . pack . show
