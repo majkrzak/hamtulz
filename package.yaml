@@ -4,6 +4,13 @@ github:              "majkrzak/hamtulz"
 license:             ISC
 author:              "Piotr Majkrzak"
 
+
+x-ghc-options: &ghc-otions
+- -threaded
+- -rtsopts
+- '"-with-rtsopts=-N"'
+- -g
+
 dependencies:
 - base >= 4.7 && < 5
 - parsec
@@ -56,10 +63,7 @@ executables:
     - hamtulz-adi
     - hamtulz-adif
     - hamtulz-log
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    ghc-options: *ghc-otions
   log2adif:
     main: Main.hs
     source-dirs: app/log2adif
@@ -69,10 +73,7 @@ executables:
     - hamtulz-lens-helper
     - hamtulz-empty
     - hamtulz-log
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    ghc-options: *ghc-otions
   add_log:
     main: Main.hs
     source-dirs: app/add_log
@@ -96,10 +97,7 @@ executables:
     - hamtulz-empty
     - hamtulz-log
     - hamtulz-valid
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    ghc-options: *ghc-otions
 
 internal-libraries:
   hamtulz-valid:
@@ -168,10 +166,7 @@ tests:
     - tasty-hunit
     - smallcheck
     - QuickCheck
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    ghc-options: *ghc-otions
   test-yaml:
     main: Main.hs
     source-dirs: test/yaml
@@ -186,7 +181,4 @@ tests:
     - tasty-hunit
     - smallcheck
     - QuickCheck
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+    ghc-options: *ghc-otions

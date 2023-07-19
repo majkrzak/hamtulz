@@ -1,19 +1,20 @@
 module Data.Yaml.Helper (showFromYaml, showToYaml, parseYaml) where
 
+import Data.Conduit (runConduitRes, yield, (.|))
 import Data.Text (Text, pack, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.Time (UTCTime)
 import Data.Time.Format.ISO8601 (iso8601ParseM)
 import Data.Typeable (Proxy (Proxy), Typeable, typeRep)
 import Data.Yaml.Builder (YamlBuilder, string)
-import Data.Yaml.Parser (FromYaml, YamlParser, YamlValue, fromYaml, withText, sinkRawDoc, parseRawDoc)
-import Text.Read (readEither)
-import Text.Libyaml (decode)
-import Data.Conduit (runConduitRes, yield, (.|))
+import Data.Yaml.Parser (FromYaml, YamlParser, YamlValue, fromYaml, parseRawDoc, sinkRawDoc, withText)
 import System.IO.Unsafe (unsafePerformIO)
+import Text.Libyaml (decode)
+import Text.Read (readMaybe)
 
-showFromYaml :: Read a => YamlValue -> YamlParser a
-showFromYaml = withText mempty $ either fail return . readEither . unpack
+showFromYaml :: forall a. (Read a, Typeable a) => YamlValue -> YamlParser a
+showFromYaml = withText mempty $ \x ->
+  maybe (fail $ "Can not parse " ++ show x ++ " as " ++ show (typeRep (Proxy :: Proxy a))) return $ readMaybe $ unpack x
 
 showToYaml :: Show a => a -> YamlBuilder
 showToYaml = string . pack . show
@@ -23,6 +24,4 @@ instance FromYaml UTCTime where
 
 parseYaml :: FromYaml a => Text -> Maybe a
 parseYaml s = do
-    let raw = unsafePerformIO $ runConduitRes (decode (encodeUtf8 s) .| sinkRawDoc)
-    res <- parseRawDoc raw
-    return res
+  parseRawDoc $ unsafePerformIO $ runConduitRes (decode (encodeUtf8 s) .| sinkRawDoc)
