@@ -9,7 +9,10 @@
           rustc
           rustfmt
           clippy
+          rustPlatform.rustLibSrc
         ];
+
+        RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
       };
     };
 }
