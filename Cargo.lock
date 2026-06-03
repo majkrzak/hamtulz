@@ -6,7 +6,9 @@ version = 4
 name = "hamtulz-adif"
 version = "0.0.0"
 dependencies = [
+ "hamtulz-radio",
  "nom",
+ "thiserror",
 ]
 
 [[package]]
