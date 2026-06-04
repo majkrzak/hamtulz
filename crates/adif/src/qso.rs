@@ -1,37 +1,18 @@
 use hamtulz_radio::{Band, Frequency};
-use thiserror::Error;
 
 use crate::{adi, adx};
 
-/// Error returned when a typed ADIF field cannot be parsed.
-#[derive(Debug, Error)]
-#[error("invalid value '{value}' for field {field}")]
-pub struct QsoError {
-    pub field: String,
-    pub value: String,
-}
-
 macro_rules! define_qso {
     ($($(#[$attr:meta])* $field:ident : $ty:ty),* $(,)?) => {
-        /// A single QSO from an ADI file.
-        ///
-        /// Represents one logged contact with all standard ADIF fields
-        /// (excluding application-defined and user-defined fields).
-        /// Every field is optional — absent fields are `None`.
-        ///
-        /// Per [ADIF 3.1.7](https://www.adif.org/317/ADIF_317.htm).
+        /// A single QSO per [ADIF 3.1.7 §III.C.1.b](https://www.adif.org/317/ADIF_317.htm).
         #[derive(Debug, Clone, PartialEq)]
         pub struct Qso {
             $($(#[$attr])* pub $field: Option<$ty>),*
         }
 
         impl TryFrom<&adi::Record> for Qso {
-            type Error = QsoError;
+            type Error = crate::Error;
 
-            /// Extracts known ADIF fields from a wire-format ADI [`Record`].
-            ///
-            /// Field names are matched case-insensitively.
-            /// Returns [`QsoError`] on invalid input.
             fn try_from(record: &adi::Record) -> Result<Self, Self::Error> {
                 let mut qso = Self {
                     $($field: None),*
@@ -40,9 +21,11 @@ macro_rules! define_qso {
                     $(
                         if f.name.eq_ignore_ascii_case(stringify!($field)) {
                             qso.$field = Some(
-                                f.value.parse().map_err(|_| QsoError {
-                                    field: stringify!($field).to_string(),
-                                    value: f.value.clone(),
+                                f.value.parse().map_err(|_| {
+                                    crate::Error::InvalidFieldValue {
+                                        field: stringify!($field).to_string(),
+                                        value: f.value.clone(),
+                                    }
                                 })?,
                             );
                         }
@@ -53,9 +36,6 @@ macro_rules! define_qso {
         }
 
         impl From<&Qso> for adi::Record {
-            /// Converts back to a wire-format ADI [`Record`].
-            ///
-            /// Only `Some` fields are emitted. Field names are uppercased.
             fn from(qso: &Qso) -> Self {
                 let mut fields = Vec::new();
                 $(
@@ -72,12 +52,8 @@ macro_rules! define_qso {
         }
 
         impl TryFrom<&adx::Record> for Qso {
-            type Error = QsoError;
+            type Error = crate::Error;
 
-            /// Extracts known ADIF fields from a wire-format ADX [`Record`].
-            ///
-            /// Field names are matched case-insensitively.
-            /// Returns [`QsoError`] on invalid input.
             fn try_from(record: &adx::Record) -> Result<Self, Self::Error> {
                 let mut qso = Self {
                     $($field: None),*
@@ -86,9 +62,11 @@ macro_rules! define_qso {
                     $(
                         if f.name.eq_ignore_ascii_case(stringify!($field)) {
                             qso.$field = Some(
-                                f.value.parse().map_err(|_| QsoError {
-                                    field: stringify!($field).to_string(),
-                                    value: f.value.clone(),
+                                f.value.parse().map_err(|_| {
+                                    crate::Error::InvalidFieldValue {
+                                        field: stringify!($field).to_string(),
+                                        value: f.value.clone(),
+                                    }
                                 })?,
                             );
                         }
@@ -99,9 +77,6 @@ macro_rules! define_qso {
         }
 
         impl From<&Qso> for adx::Record {
-            /// Converts back to a wire-format ADX [`Record`].
-            ///
-            /// Only `Some` fields are emitted. Field names are uppercased.
             fn from(qso: &Qso) -> Self {
                 let mut fields = Vec::new();
                 $(
