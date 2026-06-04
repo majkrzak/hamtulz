@@ -3,15 +3,6 @@
 version = 4
 
 [[package]]
-name = "adi"
-version = "0.0.0"
-dependencies = [
- "nom",
- "serde",
- "thiserror",
-]
-
-[[package]]
 name = "hamtulz-adif"
 version = "0.0.0"
 dependencies = [
