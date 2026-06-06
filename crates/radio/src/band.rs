@@ -1,11 +1,10 @@
-use serde::{Deserialize, Serialize};
+use serde_with::{DeserializeFromStr, SerializeDisplay};
 use std::fmt;
 use std::str::FromStr;
 
 macro_rules! bands {
     ($([$name:ident, $label:literal $(, ($lo:expr, $hi:expr))?]),+ $(,)?) => {
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-        #[serde(into = "String", try_from = "&str")]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, SerializeDisplay, DeserializeFromStr)]
         pub enum Band { $( $name, )+ }
 
         impl fmt::Display for Band {
@@ -24,20 +23,6 @@ macro_rules! bands {
                     $( $label => Ok(Band::$name), )+
                     _ => Err(ParseBandError::InvalidValue),
                 }
-            }
-        }
-
-        impl TryFrom<&str> for Band {
-            type Error = ParseBandError;
-
-            fn try_from(s: &str) -> Result<Self, Self::Error> {
-                s.parse()
-            }
-        }
-
-        impl From<Band> for String {
-            fn from(b: Band) -> Self {
-                b.to_string()
             }
         }
 

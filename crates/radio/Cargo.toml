@@ -3,5 +3,6 @@ name = "hamtulz-radio"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
+serde = "1"
+serde_with = { version = "3", features = ["macros"] }
 thiserror = "2"

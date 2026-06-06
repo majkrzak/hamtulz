@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
+use serde_with::{DeserializeFromStr, SerializeDisplay};
 use std::fmt;
 use std::num::ParseFloatError;
 use std::str::FromStr;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(into = "String", try_from = "&str")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, SerializeDisplay, DeserializeFromStr)]
 pub struct Frequency(u64);
 
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
@@ -36,31 +35,5 @@ impl FromStr for Frequency {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mhz: f64 = s.parse()?;
         Ok(Frequency::from_mhz(mhz))
-    }
-}
-
-impl From<f64> for Frequency {
-    fn from(mhz: f64) -> Self {
-        Frequency::from_mhz(mhz)
-    }
-}
-
-impl From<Frequency> for f64 {
-    fn from(f: Frequency) -> Self {
-        f.as_mhz()
-    }
-}
-
-impl TryFrom<&str> for Frequency {
-    type Error = ParseFrequencyError;
-
-    fn try_from(s: &str) -> Result<Self, Self::Error> {
-        s.parse()
-    }
-}
-
-impl From<Frequency> for String {
-    fn from(f: Frequency) -> Self {
-        f.to_string()
     }
 }
