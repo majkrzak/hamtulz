@@ -1,9 +1,0 @@
-[package]
-name = "hamtulz-adif"
-edition = "2021"
-
-[dependencies]
-nom = "8"
-thiserror = "2"
-xmltree = "0.12"
-hamtulz-radio = { path = "../radio" }

@@ -1,5 +1,5 @@
-pub mod band;
-pub mod frequency;
+mod band;
+mod frequency;
 
-pub use band::{Band, BandParseError, OutOfBandFrequency};
-pub use frequency::{Frequency, FrequencyParseError};
+pub use band::{Band, OutOfBandFrequency, ParseBandError};
+pub use frequency::{Frequency, ParseFrequencyError};

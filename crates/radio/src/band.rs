@@ -4,20 +4,6 @@ use std::str::FromStr;
 
 macro_rules! bands {
     ($([$name:ident, $label:literal $(, ($lo:expr, $hi:expr))?]),+ $(,)?) => {
-        /// Amateur radio band as defined in [ADIF 3.1.7 §III.B.4](https://adif.org/317/ADIF_317.htm#Band_Enumeration).
-        ///
-        /// Each variant maps to a frequency range and an ADIF string label.
-        ///
-        /// # Parsing and formatting
-        ///
-        /// Use [`FromStr`] to parse an ADIF band string (e.g. `"40m"`) into a `Band` variant,
-        /// and [`Display`](std::fmt::Display) to format a variant back into its ADIF label.
-        /// Both directions are case-sensitive and must match the ADIF 3.1.7 specification exactly.
-        ///
-        /// Serde [`Serialize`] and [`Deserialize`] use the ADIF label string (via `Display`/`FromStr`),
-        /// so the type can be round-tripped through YAML, JSON, or any serde-compatible format.
-        ///
-        /// Use [`TryFrom<Frequency>`](crate::Frequency) to look up a band by frequency (e.g. `Band::try_from(freq)`).
         #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
         #[serde(into = "String", try_from = "&str")]
         pub enum Band { $( $name, )+ }
@@ -31,18 +17,18 @@ macro_rules! bands {
         }
 
         impl FromStr for Band {
-            type Err = BandParseError;
+            type Err = ParseBandError;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 match s {
                     $( $label => Ok(Band::$name), )+
-                    _ => Err(BandParseError),
+                    _ => Err(ParseBandError::InvalidValue),
                 }
             }
         }
 
         impl TryFrom<&str> for Band {
-            type Error = BandParseError;
+            type Error = ParseBandError;
 
             fn try_from(s: &str) -> Result<Self, Self::Error> {
                 s.parse()
@@ -69,14 +55,14 @@ macro_rules! bands {
     };
 }
 
-/// Error returned when parsing an invalid ADIF band string.
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
-#[error("invalid band value")]
-pub struct BandParseError;
+pub enum ParseBandError {
+    #[error("invalid band value")]
+    InvalidValue,
+}
 
-/// Error returned when a frequency falls outside all defined amateur bands.
 #[derive(Debug, Clone, PartialEq, thiserror::Error)]
-#[error("frequency {0} MHz out of defined amateur bands")]
+#[error("frequency {0} MHz out of defined bands")]
 pub struct OutOfBandFrequency(pub crate::Frequency);
 
 bands! {
